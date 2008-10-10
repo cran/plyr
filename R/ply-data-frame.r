@@ -24,38 +24,12 @@
 # @arguments name of the progress bar to use, see \code{\link{create_progress_bar}}
 # @value a data frame
 ldply <- function(.data, .fun = NULL, ..., .progress = "none") {
-  if (!is(.data, "split")) .data <- as.list(.data)
+  if (!inherits(.data, "split")) .data <- as.list(.data)
   res <- llply(.data = .data, .fun = .fun, ..., .progress = .progress)
   # Just want to treat as a list in here
   attr(res, "split_labels") <- NULL
   
-  if (length(res) == 0) return(data.frame())
-  
-  atomic <- unlist(llply(res, is.atomic))
-  if (all(atomic)) {
-    ulength <- unique(unlist(llply(res, length)))
-    if (length(ulength) != 1) stop("Results are not equal lengths")
-    
-    if (length(res) > 1) {
-      resdf <- as.data.frame(do.call("rbind", res))      
-    } else {
-      resdf <- data.frame(res[[1]])
-    }
-    rows <- rep(1, length(res))
-  } else {
-    l_ply(res, function(x) if(!is.null(x) & !is.data.frame(x)) stop("Not a data.frame!"))
-
-    resdf <- do.call("rbind.fill", res)
-    rows <- laply(res, function(x) if(is.null(x)) 0 else nrow(x))
-  }
-
-  labels <- attr(.data, "split_labels")
-  if (!is.null(labels) && nrow(labels) == length(.data)) {
-    cols <- setdiff(names(labels), names(resdf))
-    resdf <- cbind(labels[rep(1:nrow(labels), rows), cols, drop=FALSE], resdf)
-  }
-  
-  unrowname(resdf)
+  list_to_dataframe(res, attr(.data, "split_labels"))
 }
 
 # Split data frame, apply function, and return results in a data frame

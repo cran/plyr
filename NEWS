@@ -1,3 +1,11 @@
+plyr 0.1.2 (2008-XX-XX) ---------------------------------------------------
+
+  * a*ply now works correctly with array-lists
+  * drop. -> .drop
+  * r*ply now works with ...
+  * use inherits instead of is so method package doesn't need to be loaded
+  * fix bug with using formulas
+
 plyr 0.1.1 (2008-10-08) ---------------------------------------------------
 
   * argument names now start with . (instead of ending with it) - this should prevent name clashes with arguments of the called function 
