@@ -7,8 +7,6 @@
 # elements and discards the output.  This is useful for functions that you are 
 # calling purely for their side effects like display plots and saving output.
 # 
-# See \code{vignette("intro", "plyr")} for more details, description and case
-# studies.
 # 
 # @keyword manip
 # @arguments list to be processed
@@ -44,8 +42,6 @@ l_ply <- function(.data, .fun = NULL, ..., .progress = "none", .print = FALSE) {
 # are calling purely for their side effects like display plots and saving
 # output.
 # 
-# See \code{vignette("intro", "plyr")} for more details, description and case
-# studies.
 # 
 # @keyword manip
 # @arguments data frame to be processed
@@ -59,7 +55,7 @@ d_ply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .prin
   .variables <- as.quoted(.variables)
   pieces <- splitter_d(.data, .variables)
   
-  l_ply(.data = pieces, .fun = .fun, .progress = .progress, .print = .print)
+  l_ply(.data = pieces, .fun = .fun, ..., .progress = .progress, .print = .print)
 }
 
 # Split array, apply function, and discard results
@@ -72,8 +68,6 @@ d_ply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .prin
 # useful for functions that you are calling purely for their side effects like
 # display plots and saving output.
 # 
-# See \code{vignette("intro", "plyr")} for more details, description and case
-# studies.
 # 
 # @keyword manip
 # @arguments matrix, array or data frame to be processed
@@ -85,5 +79,5 @@ d_ply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .prin
 a_ply <- function(.data, .margins, .fun = NULL, ..., .progress = "none", .print = FALSE) {
   pieces <- splitter_a(.data, .margins)
   
-  l_ply(.data = pieces, .fun = .fun, .progress = .progress, .print = .print)
+  l_ply(.data = pieces, .fun = .fun, ..., .progress = .progress, .print = .print)
 }
