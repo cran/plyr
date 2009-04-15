@@ -40,16 +40,27 @@ rbind.fill <- function(...) {
     df <- dfs[[i]]
     
     for(var in names(df)) {
-      if (length(df[[var]]) > 0) output[[var]][rng] <- df[[var]]
+      if (length(df[[var]]) > 0) {
+        output[[var]][rng] <- df[[var]]
+        # Copy attributes if necessary 
+        if (is.null(attributes(output[[var]])) &&
+          !is.null(attributes(df[[var]])))
+          attributes(output[[var]]) <- attributes(df[[var]])
+      }
     }
   }
 
-  # Ensure all variables are the same length.  They might not be if the 
-  # last data frame does not contain all rows.
+  # Ensure all variables are the same length; they might not be if the 
+  # last data frame does not contain all rows.  Can't use length<- because
+  # that strips attributes
+  rows <- sum(rows)
   for(var in names(output)) {
-    length(output[[var]]) <- sum(rows)
+    n <- length(output[[var]])
+    if (n < rows) {
+      output[[var]] <- c(output[[var]], rep(NA, rows - n))
+    }
   }
-  
+
   as_df(output)
 }
 
