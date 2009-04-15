@@ -1,3 +1,27 @@
+plyr 0.1.6 (2008-XX-XX) ---------------------------------------------------
+
+Improvements:
+
+* all ply functions deal more elegantly when given function names: can supply a vector of function names, and name is used as label in output
+* failwith and each now work with function names as well as functions (i.e. "nrow" instead of nrow)
+* each now accepts a list of functions or a vector of function names
+* l*ply will use list names where present
+* if .inform is TRUE, error messages will give you information about where errors within your data - hopefully this will make problems easier to track down
+
+Speed-ups
+
+* massive speed ups for splitting large arrays
+* fixed typo that was causing a 50% speed penalty for d*ply
+* rewritten rbind.fill is considerably (> 4x) faster for many data frames
+* colwise about twice as fast
+
+Bug fixes:
+
+* daply: now works when the data frame is split by multiple variables
+* aaply: now works with vectors
+* ddply: first variable now varies slowest as you'd expect
+
+
 plyr 0.1.5 (2008-02-23) ---------------------------------------------------
 
 * colwise now accepts a quoted list as its second argument.  This allows you to specify the names of columns to work on: colwise(mean, .(lat, long))

@@ -17,7 +17,6 @@
 # @arguments other arguments passed on to \code{.fun}
 # @arguments name of the progress bar to use, see \code{\link{create_progress_bar}}
 # @value list of results
-# 
 #X llply(llply(mtcars, round), table)
 #X llply(baseball, summary)
 #X # Examples from ?lapply
@@ -25,31 +24,47 @@
 #X
 #X llply(x, mean)
 #X llply(x, quantile, probs = 1:3/4)
-llply <- function(.data, .fun = NULL, ..., .progress = "none") {
-  if (!inherits(.data, "split")) .data <- as.list(.data)
-  if (is.null(.fun)) return(.data)
-  if (length(.data) == 0) return(list())
+llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE) {
+  pieces <- if (inherits(.data, "split")) .data else as.list(.data)
+  if (is.null(.fun)) return(pieces)
+  n <- length(pieces)
+  if (n == 0) return(list())
   
-  if (is.character(.fun)) .fun <- match.fun(.fun)
+  if (is.character(.fun)) .fun <- each(.fun)
+  # .fun <- each(.fun)
   if (!is.function(.fun)) stop(".fun is not a function.")
   
   progress <- create_progress_bar(.progress)
-  
-  progress$init(length(.data))
+  progress$init(n)
 
-  n <- length(.data)
   result <- vector("list", n)
 
   for(i in seq_len(n)) {
-    res <- .fun(.data[[i]], ...)
+    piece <- pieces[[i]]
+    
+    # Display informative error messages, if desired
+    if (.inform) {
+      res <- try(.fun(piece, ...))
+      if (inherits(res, "try-error")) {
+        piece <- paste(capture.output(print(piece)), collapse = "\n")
+        stop("with piece ", i, ": \n", piece, call. = FALSE)
+      }      
+    } else {
+      res <- .fun(piece, ...)
+    }
+    
     if (!is.null(res)) result[[i]] <- res
     progress$step()
   }
   
   attributes(result)[c("split_type", "split_labels")] <-
-    attributes(.data)[c("split_type", "split_labels")]
-  names(result) <- names(.data)
-  dim(result) <- dim(.data)
+    attributes(pieces)[c("split_type", "split_labels")]
+  names(result) <- names(pieces)
+
+  # Only set dimension if not null, otherwise names are removed
+  if (!is.null(dim(pieces))) {
+    dim(result) <- dim(pieces)    
+  }
   progress$term()
   
   result
@@ -75,7 +90,6 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none") {
 # @arguments other arguments passed on to \code{.fun}
 # @arguments name of the progress bar to use, see \code{\link{create_progress_bar}}
 # @value if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
-# @value list of results
 #X linmod <- function(df) lm(rbi ~ year, data = transform(df, year = year - min(year)))
 #X models <- dlply(baseball, .(id), linmod)
 #X models[[1]]
@@ -113,7 +127,6 @@ dlply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop
 # @arguments other arguments passed on to \code{.fun}
 # @arguments name of the progress bar to use, see \code{\link{create_progress_bar}}
 # @value list of results
-# 
 #X alply(ozone, 3, quantile)
 #X alply(ozone, 3, function(x) table(round(x)))
 alply <- function(.data, .margins, .fun = NULL, ..., .progress = "none") {

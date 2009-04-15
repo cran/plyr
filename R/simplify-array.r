@@ -1,38 +1,3 @@
-# List to data frame
-# Reduce/simplify a list of homogenous objects to a data frame
-# 
-# @arguments list of input data
-# @arguments a data frame of labels, one row for each element of res
-# @keywords internal
-list_to_dataframe <- function(res, labels = NULL) { 
-  if (length(res) == 0) return(data.frame())
-  
-  atomic <- unlist(llply(res, is.atomic))
-  if (all(atomic)) {
-    ulength <- unique(unlist(llply(res, length)))
-    if (length(ulength) != 1) stop("Results are not equal lengths")
-    
-    if (length(res) > 1) {
-      resdf <- as.data.frame(do.call("rbind", res))      
-    } else {
-      resdf <- data.frame(res[[1]])
-    }
-    rows <- rep(1, length(res))
-  } else {
-    l_ply(res, function(x) if(!is.null(x) & !is.data.frame(x)) stop("Not a data.frame!"))
-
-    resdf <- do.call("rbind.fill", res)
-    rows <- unlist(llply(res, function(x) if(is.null(x)) 0 else nrow(x)))
-  }
-
-  if (!is.null(labels) && nrow(labels) == length(res)) {
-    cols <- setdiff(names(labels), names(resdf))
-    resdf <- cbind(labels[rep(1:nrow(labels), rows), cols, drop=FALSE], resdf)
-  }
-  
-  unrowname(resdf)
-}
-
 
 # List to array
 # Reduce/simplify a list of homogenous objects to an array
@@ -40,7 +5,7 @@ list_to_dataframe <- function(res, labels = NULL) {
 # @arguments list of input data
 # @arguments a data frame of labels, one row for each element of res
 # @arguments should extra dimensions be dropped (TRUE) or preserved (FALSE)
-# @keywords internal
+# @keyword internal
 list_to_array <- function(res, labels = NULL, .drop = FALSE) {
   if (length(res) == 0) return(vector())
   n <- length(res)
@@ -49,10 +14,12 @@ list_to_array <- function(res, labels = NULL, .drop = FALSE) {
   if (all(atomic)) {
     # Atomics need to be same size
     dlength <- unique.default(llply(res, dims))
-    if (length(dlength) != 1) stop("Results must have the same number of dimensions.")
+    if (length(dlength) != 1) 
+      stop("Results must have the same number of dimensions.")
 
     dims <- unique(do.call("rbind", llply(res, amv_dim)))
-    if (nrow(dims) != 1) stop("Results must have the same dimensions.")    
+    if (nrow(dims) != 1) 
+      stop("Results must have the same dimensions.")    
 
     res_dim <- amv_dim(res[[1]])
     res_labels <- amv_dimnames(res[[1]])
@@ -80,7 +47,7 @@ list_to_array <- function(res, labels = NULL, .drop = FALSE) {
   }
   
   index <- cbind(
-    labels[rep(seq_len(nrow(labels)), each = nrow(res_index)), , drop = FALSE],
+    labels[rep(seq_len(nrow(labels)), each = nrow(res_index)), ,drop = FALSE],
     res_index[rep(seq_len(nrow(res_index)), nrow(labels)), , drop = FALSE]
   )
   
@@ -88,8 +55,12 @@ list_to_array <- function(res, labels = NULL, .drop = FALSE) {
   out_labels <- c(in_labels, res_labels)
   n <- prod(out_dim)
 
-  overall <- order(ninteraction(index))
-  if (length(overall) < n) overall <- match(1:n, overall, nomatch = NA)
+  overall <- ninteraction(index)
+  if (length(overall) < n) {
+    overall <- match(1:n, overall, nomatch = NA)
+  } else {
+    overall <- order(overall)
+  }
   
   out_array <- res[overall]  
   dim(out_array) <- out_dim
