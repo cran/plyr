@@ -13,6 +13,15 @@
 #X rownames(b1) <- NULL
 #X system.time(b2 <- rbind.fill(bplayer))
 #X stopifnot(all.equal(b1, b2))
+#X 
+#X a <- data.frame(a = factor(letters[1:3]), b = 1:3, c = date())
+#X b <- data.frame(a = factor(letters[3:5]), 
+#X    d = as.Date(c("2008-01-01", "2009-01-01", "2010-01-01")))
+#X ab1 <- rbind.fill(a, b)[, letters[1:4]]
+#X ab2 <- rbind.fill(b, a)[c(4:6, 1:3), letters[1:4]]
+#X ab2$a <- factor(ab2$a, levels(ab1$a))
+#X rownames(ab2) <- NULL
+#X stopifnot(all.equal(ab1, ab2))
 rbind.fill <- function(...) {
   dfs <- list(...)
   if (length(dfs) == 0) return(list())
@@ -21,43 +30,40 @@ rbind.fill <- function(...) {
   }
   
   rows <- unlist(lapply(dfs, nrow))
+  nrows <- sum(rows)
   
   output <- list()
+  seen <- character()
 
   # Set up factors
   factors <- names(dfs[[1]])[laply(dfs[[1]], is.factor)]
   for(var in factors) {
     all <- llply(dfs, function(df) levels(df[[var]]))
     output[[var]] <- factor(levels = unique(unlist(all)))
+    length(output[[var]]) <- nrows
+    seen <- c(seen, var)
   }
 
   # Compute start and end positions for each matrix
   pos <- matrix(cumsum(rbind(1, rows - 1)), ncol = 2, byrow = T)
   
-  # Do in reverse so first step expands to largest size
-  for(i in rev(seq_along(rows))) { 
+  for(i in seq_along(rows)) { 
     rng <- pos[i, 1]:pos[i, 2]
     df <- dfs[[i]]
     
     for(var in names(df)) {
       if (length(df[[var]]) > 0) {
-        output[[var]][rng] <- df[[var]]
-        # Copy attributes if necessary 
-        if (is.null(attributes(output[[var]])) &&
-          !is.null(attributes(df[[var]])))
-          attributes(output[[var]]) <- attributes(df[[var]])
-      }
-    }
-  }
+        if (!var %in% seen) {
+          
+          output[[var]] <- rep(df[[var]], length.out = nrows)
+          output[[var]][] <- NA
 
-  # Ensure all variables are the same length; they might not be if the 
-  # last data frame does not contain all rows.  Can't use length<- because
-  # that strips attributes
-  rows <- sum(rows)
-  for(var in names(output)) {
-    n <- length(output[[var]])
-    if (n < rows) {
-      output[[var]] <- c(output[[var]], rep(NA, rows - n))
+          seen <- c(seen, var)
+        }
+
+        output[[var]][rng] <- df[[var]]
+        
+      }
     }
   }
 
