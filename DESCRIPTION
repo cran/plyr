@@ -1,7 +1,7 @@
 Package: plyr
 Type: Package
 Title: Tools for splitting, applying and combining data
-Version: 0.1.8
+Version: 0.1.9
 Author: Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Description: plyr is a set of tools that solves a common set of
@@ -16,6 +16,6 @@ Depends: R (>= 2.8)
 Suggests: RUnit, abind, tcltk
 License: GPL
 LazyData: true
-Packaged: Mon Apr 20 19:44:14 2009; hadley
+Packaged: 2009-06-23 12:55:14 UTC; hadley
 Repository: CRAN
-Date/Publication: 2009-04-21 06:57:21
+Date/Publication: 2009-06-23 13:20:14

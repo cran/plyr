@@ -29,11 +29,13 @@ rbind.fill <- function(...) {
     dfs <- dfs[[1]]
   }
   
-  rows <- unlist(lapply(dfs, nrow))
+  rows <- unlist(lapply(dfs, function(x) if(is.null(x)) 0 else nrow(x)))
   nrows <- sum(rows)
   
   output <- list()
   seen <- character()
+  
+  vars <- unique(unlist(llply(dfs, base::names)))
 
   # Set up factors
   factors <- names(dfs[[1]])[laply(dfs[[1]], is.factor)]
@@ -65,9 +67,9 @@ rbind.fill <- function(...) {
         
       }
     }
-  }
-
-  as_df(output)
+  }  
+  
+  as_df(output[vars])
 }
 
 # Compact list
