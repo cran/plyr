@@ -1,28 +1,62 @@
-# Determine if a vector is discrete
-# A discrete vector is a factor or a character vector
-# 
-# @arguments vector to test
-# @keyword internal
-#X is.discrete(1:10)
-#X is.discrete(c("a", "b", "c"))
-#X is.discrete(factor(c("a", "b", "c")))
+#' Determine if a vector is discrete.
+#' A discrete vector is a factor or a character vector
+#' 
+#' @param x vector to test
+#' @keywords internal
+#' @export
+#' @examples
+#' is.discrete(1:10)
+#' is.discrete(c("a", "b", "c"))
+#' is.discrete(factor(c("a", "b", "c")))
 is.discrete <- function(x) is.factor(x) || is.character(x) || is.logical(x)
 
-# Un-rowname
-# Strip rownames from an object
-# 
-# @keyword internal
+#' Un-rowname.
+#' Strip rownames from an object
+#' 
+#' @keywords internal
+#' @param x data frame
+#' @export
 unrowname <- function(x) {
   rownames(x) <- NULL
   x
 }
 
-# Reorder character
-# Make it possible to reorder character vectors
-# 
-# Should be removed once this is built into R.
-# 
-# @keyword internal
-reorder.character <- function(x, X, FUN = mean, ...) {
-  reorder(factor(x), X = X, FUN = FUN, ...)
+#' Function that always returns true.
+#' 
+#' @param ... all input ignored
+#' @return \code{TRUE}
+#' @keywords internal
+#' @seealso \code{\link{colwise}} which uses it
+#' @export
+true <- function(...) TRUE
+
+#' Compact list.
+#' Remove all NULL entries from a list
+#' 
+#' @param l list
+#' @keywords manip internal 
+#' @export
+compact <- function(l) Filter(Negate(is.null), l)
+
+#' Number of unique values.
+#' Calculate number of unique values of a variable as efficiently as possible.
+#' 
+#' @param x vector
+#' @keywords internal
+nunique <- function(x) {
+  if (is.factor(x)) {
+    length(levels(x))
+  } else {
+    length(unique(x))
+  }
+}
+
+#' Check if a data frame is empty.
+#' Empty if it's null or it has 0 rows or columns
+#' 
+#' @param df data frame to check
+#' @keywords internal
+#' @export
+empty <- function(df) {
+  (is.null(df) || nrow(df) == 0 || ncol(df) == 0)
 }
