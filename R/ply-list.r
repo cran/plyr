@@ -19,6 +19,8 @@
 #' @param .inform produce informative error messages?  This is turned off by
 #'   by default because it substantially slows processing speed, but is very
 #'   useful for debugging
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return list of results
 #' @export
 #' @examples
@@ -29,29 +31,32 @@
 #'
 #' llply(x, mean)
 #' llply(x, quantile, probs = 1:3/4)
-llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE) {
-  if (inherits(.data, "split")) {
-    pieces <- .data
+llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE, .parallel = FALSE) {
+  if (is.null(.fun)) return(as.list(.data))
+  if (is.character(.fun)) .fun <- each(.fun)
+  if (!is.function(.fun)) stop(".fun is not a function.")
+
+  if (!inherits(.data, "split")) {
+    # This special case can be done much faster with lapply, so do it.
+    fast_path <- .progress == "none" && !.inform && !.parallel
+    if (fast_path) return(lapply(.data, .fun, ...))    
+    
+    pieces <- if (!is.list(.data)) as.list(.data) else .data
   } else {
-    pieces <- as.list(.data)
+    pieces <- .data
   }
-  if (is.null(.fun)) return(as.list(pieces))
+  
   n <- length(pieces)
   if (n == 0) return(list())
-  
-  if (is.character(.fun)) .fun <- each(.fun)
-  # .fun <- each(.fun)
-  if (!is.function(.fun)) stop(".fun is not a function.")
   
   progress <- create_progress_bar(.progress)
   progress$init(n)
   on.exit(progress$term())
 
   result <- vector("list", n)
-
-  for(i in seq_len(n)) {
+  do.ply <- function(i) {
     piece <- pieces[[i]]
-    
+
     # Display informative error messages, if desired
     if (.inform) {
       res <- try(.fun(piece, ...))
@@ -62,9 +67,20 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE) 
     } else {
       res <- .fun(piece, ...)
     }
-    
-    if (!is.null(res)) result[[i]] <- res
     progress$step()
+    res
+  }
+  if (.parallel) {
+    if (!require("foreach")) {
+      stop("foreach package required for parallel plyr operation", 
+        call. = FALSE)
+    }
+    if (getDoParWorkers() == 1) {
+      warning("No parallel backend registered", call. = TRUE)
+    }
+    result <- foreach(i = seq_len(n)) %dopar% do.ply(i)
+  } else {
+    result <- loop_apply(n, do.ply)
   }
   
   attributes(result)[c("split_type", "split_labels")] <-
@@ -100,6 +116,8 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE) 
 #' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
 #' @param .drop should combinations of variables that do not appear in the 
 #'   data be preserved (FALSE) or dropped (TRUE, default)
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
 #' @export
 #' @examples
@@ -111,11 +129,12 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE) 
 #' with(coef, plot(`(Intercept)`, year))
 #' qual <- laply(models, function(mod) summary(mod)$r.squared)
 #' hist(qual)
-dlply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop = TRUE) {
+dlply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop = TRUE, .parallel = FALSE) {
   .variables <- as.quoted(.variables)
   pieces <- splitter_d(.data, .variables, drop = .drop)
   
-  llply(.data = pieces, .fun = .fun, ..., .progress = .progress)
+  llply(.data = pieces, .fun = .fun, ..., 
+    .progress = .progress, .parallel = .parallel)
 }
 
 #' Split array, apply function, and return results in a list.
@@ -138,13 +157,19 @@ dlply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop
 #' @param .margins a vector giving the subscripts to split up \code{data} by.  1 splits up by rows, 2 by columns and c(1,2) by rows and columns, and so on for higher dimensions
 #' @param .fun function to apply to each piece
 #' @param ... other arguments passed on to \code{.fun}
+#' @param .expand if \code{.data} is a data frame, should output be 1d 
+#'   (expand = FALSE), with an element for each row; or nd (expand = TRUE),
+#'    with a dimension for each variable.
 #' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return list of results
 #' @examples
 #' alply(ozone, 3, quantile)
 #' alply(ozone, 3, function(x) table(round(x)))
-alply <- function(.data, .margins, .fun = NULL, ..., .progress = "none") {
-  pieces <- splitter_a(.data, .margins)
+alply <- function(.data, .margins, .fun = NULL, ..., .expand = TRUE, .progress = "none", .parallel = FALSE) {
+  pieces <- splitter_a(.data, .margins, .expand)
   
-  llply(.data = pieces, .fun = .fun, ..., .progress = .progress)
+  llply(.data = pieces, .fun = .fun, ..., 
+    .progress = .progress, .parallel = .parallel)
 }

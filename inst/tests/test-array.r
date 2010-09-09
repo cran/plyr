@@ -70,7 +70,7 @@ test_that("single column data frames work when treated as an array", {
   df <- data.frame(b=1:2)
   res <- adply(df, 1, splat(foo))
   
-  expect_that(res$X1, equals(1:2))
+  expect_that(res$b, equals(1:2))
   expect_that(as.character(res$V1), equals(c("a1c", "a2c")))
 })
 
@@ -82,4 +82,17 @@ test_that("aaply equivalent to apply with correct permutation", {
   b <- structure(a, dimnames = plyr:::amv_dimnames(a))
   expect_that(rowMeans(a), equals(aaply(a, 1, mean), check.attr = FALSE))
   expect_that(colMeans(a), equals(aaply(a, 2, mean), check.attr = FALSE))  
+})
+
+test_that("array reconstruction correct with missing cells", {
+  df <- data.frame(i = rep(1:3, each = 12), j = rep(1:3, each = 4), v = 1:36) 
+  df <- subset(df, i != j)
+
+  da <- daply(df, .(i, j), function(q) sum(q$v))
+  dd <- ddply(df, .(i, j), summarise, v1 = sum(v))
+
+  m <- matrix(NA, 3, 3)
+  m[cbind(dd$i, dd$j)] <- dd$v1
+  
+  expect_that(da, equals(m, check.attributes = FALSE))
 })

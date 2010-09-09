@@ -20,9 +20,11 @@
 #' @param .fun function to apply to each piece
 #' @param ... other arguments passed on to \code{.fun}
 #' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return a data frame
 #' @export
-ldply <- function(.data, .fun = NULL, ..., .progress = "none") {
+ldply <- function(.data, .fun = NULL, ..., .progress = "none", .parallel = FALSE) {
   if (!inherits(.data, "split")) .data <- as.list(.data)
   res <- llply(.data = .data, .fun = .fun, ..., .progress = .progress)
   
@@ -54,6 +56,8 @@ ldply <- function(.data, .fun = NULL, ..., .progress = "none") {
 #'   data be preserved (FALSE) or dropped (TRUE, default)
 #' @param ... other arguments passed on to \code{.fun}
 #' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return a data frame
 #' @export
 #' @examples
@@ -67,11 +71,12 @@ ldply <- function(.data, .fun = NULL, ..., .progress = "none") {
 #' base2 <- ddply(baseball, .(id), transform, 
 #'  career_year = year - min(year) + 1
 #' )
-ddply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop = TRUE) {
+ddply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop = TRUE, .parallel = FALSE) {
   .variables <- as.quoted(.variables)
   pieces <- splitter_d(.data, .variables, drop = .drop)
   
-  ldply(.data = pieces, .fun = .fun, ..., .progress = .progress)
+  ldply(.data = pieces, .fun = .fun, ..., 
+    .progress = .progress, .parallel = .parallel)
 }
 
 #' Split array, apply function, and return results in a data frame.
@@ -89,11 +94,17 @@ ddply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop
 #' @param .margins a vector giving the subscripts to split up \code{data} by.  1 splits up by rows, 2 by columns and c(1,2) by rows and columns, and so on for higher dimensions
 #' @param .fun function to apply to each piece
 #' @param ... other arguments passed on to \code{.fun}
+#' @param .expand if \code{.data} is a data frame, should output be 1d 
+#'   (expand = FALSE), with an element for each row; or nd (expand = TRUE),
+#'    with a dimension for each variable.
 #' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
+#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
+#'   backend provided by foreach
 #' @return a data frame
 #' @export
-adply <- function(.data, .margins, .fun = NULL, ..., .progress = "none") {
-  pieces <- splitter_a(.data, .margins)
+adply <- function(.data, .margins, .fun = NULL, ..., .expand = TRUE, .progress = "none", .parallel = FALSE) {
+  pieces <- splitter_a(.data, .margins, .expand)
   
-  ldply(.data = pieces, .fun = .fun, ..., .progress = .progress)
+  ldply(.data = pieces, .fun = .fun, ..., 
+    .progress = .progress, .parallel = .parallel)
 }
