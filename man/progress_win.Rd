@@ -4,8 +4,8 @@
 \usage{progress_win(title="plyr progress", ...)}
 
 \description{
-  Graphical progress bar, powered by Windows. A graphical progress bar
-  displayed in a separate window
+  Graphical progress bar, powered by Windows. A graphical
+  progress bar displayed in a separate window
 }
 
 \details{
@@ -17,6 +17,6 @@
   \item{...}{other arguments passed on to \code{winProgressBar}}
 }
 \examples{if(exists("winProgressBar")) {
-l_ply(1:1000, identity, .progress = "win")
-l_ply(1:1000, identity, .progress = progress_win(title="Working..."))
+l_ply(1:100, identity, .progress = "win")
+l_ply(1:100, identity, .progress = progress_win(title="Working..."))
 }}

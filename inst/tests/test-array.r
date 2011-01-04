@@ -79,9 +79,9 @@ test_that("aaply equivalent to apply with correct permutation", {
   expect_that(rowMeans(a), equals(aaply(a, 1, mean), check.attr = FALSE))
   expect_that(colMeans(a), equals(aaply(a, 2, mean), check.attr = FALSE))
   
-  b <- structure(a, dimnames = plyr:::amv_dimnames(a))
-  expect_that(rowMeans(a), equals(aaply(a, 1, mean), check.attr = FALSE))
-  expect_that(colMeans(a), equals(aaply(a, 2, mean), check.attr = FALSE))  
+  b <- structure(a, dimnames = amv_dimnames(a))
+  expect_that(rowMeans(b), equals(aaply(b, 1, mean), check.attr = FALSE))
+  expect_that(colMeans(b), equals(aaply(b, 2, mean), check.attr = FALSE))  
 })
 
 test_that("array reconstruction correct with missing cells", {
@@ -95,4 +95,30 @@ test_that("array reconstruction correct with missing cells", {
   m[cbind(dd$i, dd$j)] <- dd$v1
   
   expect_that(da, equals(m, check.attributes = FALSE))
+})
+
+
+set_dimnames <- function(x, nm) {
+  dimnames(x) <- nm
+  x
+}
+
+test_that("array names do not affect output", {
+  base <- array(1:48, dim = c(12, 4))
+  arrays <- list(
+    none = base,
+    numeric = set_dimnames(base, list(R = 1:12, C = 1:4)),
+    numeric_rev = set_dimnames(base, list(R = 12:1, C = 4:1)),
+    alpha = set_dimnames(base, list(R = letters[1:12], C = LETTERS[1:4])),
+    alpha_rev = set_dimnames(base, list(R = letters[12:1], C = LETTERS[4:1]))
+  ) 
+
+  for(name in names(arrays)) {
+    array <- arrays[[name]]
+    expect_that(aaply(array, 1, sum), 
+      equals(rowSums(array), check.attributes = FALSE), info = name)
+    expect_that(aaply(array, 2, sum), 
+      equals(colSums(array), check.attributes = FALSE), info = name)
+  }
+  
 })

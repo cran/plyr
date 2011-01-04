@@ -14,10 +14,13 @@
 #' \code{\link{as.quoted.character}} to convert strings to the appropriate
 #' data structure.
 #' 
-#' @param ... unevaluated expressions to be recorded.  Specify names if you want the set the names of the resultant variables
+#' @param ... unevaluated expressions to be recorded.  Specify names if you
+#'   want the set the names of the resultant variables
+#' @param .env environment in which unbound symbols in \code{...} should be
+#'   evaluated.  Defaults to the environment in which \code{.} was executed.
 #' @return list of symbol and language primitives
-#' @aliases . quoted
-#' @export .
+#' @aliases . quoted is.quoted
+#' @export . is.quoted
 #' @name quoted
 #' @examples
 #' .(a, b, c)
@@ -35,9 +38,11 @@
 #' ddply(mtcars, .(logcyl = log(cyl)), each(nrow, ncol))
 #' ddply(mtcars, .(vs + am), each(nrow, ncol))
 #' ddply(mtcars, .(vsam = vs + am), each(nrow, ncol))
-. <- function(...) {
-  structure(as.list(match.call()[-1]), class="quoted")
+. <- function(..., .env = parent.frame()) {
+  structure(as.list(match.call()[-1]), env = .env, class="quoted")
 }
+
+is.quoted <- function(x) inherits(x, "quoted")
 
 #' Print quoted variables.
 #' Display the \code{\link{str}}ucture of quoted variables
@@ -48,13 +53,15 @@
 print.quoted <- function(x, ...) str(x)
 
 #' Compute names of quoted variables.
-#' Figure out names of quoted variables, using specified names if they exist, otherwise using \code{\link{make.names}} on the values.
+#' Figure out names of quoted variables, using specified names if they exist,
+#' otherwise converting the values to character strings.  This may create 
+#' variable names that can only be accessed using \code{``}.
 #' 
 #' @keywords internal
 #' @S3method names quoted
 #' @method names quoted
 names.quoted <- function(x) {
-  part_names <- make.names(x)
+  part_names <- unlist(lapply(x, deparse))
   user_names <- names(unclass(x))
 
   if (!is.null(user_names)) {
@@ -72,16 +79,19 @@ names.quoted <- function(x) {
 #' @param expr quoted object to evalution
 #' @param try if TRUE, return \code{NULL} if evaluation unsuccesful
 #' @export
-eval.quoted <- function(exprs,  envir = parent.frame(), enclos = if (is.list(envir) || is.pairlist(envir)) parent.frame() else baseenv(), try = FALSE) {
-  
+eval.quoted <- function(exprs, envir = NULL, enclos = NULL, try = FALSE) {
   if (is.numeric(exprs)) return(envir[exprs])
+
+  qenv <- if (is.quoted(exprs)) attr(exprs, "env") else parent.frame()
+  if (is.null(envir)) envir <- qenv
+  if (is.data.frame(envir) && is.null(enclos)) enclos <- qenv
   
   if (try) {
     results <- lapply(exprs, failwith(NULL, eval, quiet = TRUE), 
       envir = envir, enclos = enclos)
   } else {
     results <- lapply(exprs, eval, envir = envir, enclos = enclos)
-    }
+  }
   names(results) <- names(exprs)
   
   results
@@ -102,6 +112,9 @@ eval.quoted <- function(exprs,  envir = parent.frame(), enclos = if (is.list(env
 #'  as.quoted.quoted as.quoted.NULL as.quoted.numeric c.quoted as.quoted
 #'  [.quoted
 #' @param x input to quote
+#' @param env environment in which unbound symbols in expression should be
+#'   evaluated. Defaults to the environment in which \code{as.quoted} was 
+#'   executed.
 #' @S3method as.quoted call
 #' @S3method as.quoted character
 #' @S3method as.quoted factor
@@ -116,20 +129,20 @@ eval.quoted <- function(exprs,  envir = parent.frame(), enclos = if (is.list(env
 #' as.quoted(c("a", "b", "log(d)"))
 #' as.quoted(a ~ b + log(d))
 #' @export
-as.quoted <- function(x) UseMethod("as.quoted")
-as.quoted.call <- function(x) structure(as.list(x)[-1], class="quoted")
-as.quoted.character <- function(x) {
+as.quoted <- function(x, env = parent.frame()) UseMethod("as.quoted")
+as.quoted.call <- function(x, env = parent.frame()) {
+  structure(as.list(x)[-1], env = env, class = "quoted")
+}
+as.quoted.character <- function(x, env = parent.frame()) {
   structure(
     lapply(x, function(x) parse(text = x)[[1]]), 
-    class="quoted"
+    env = env, class = "quoted"
   )
 }
-as.quoted.numeric <- function(x) {
-  structure(x, 
-    class=c("quoted", "numeric")
-  )
+as.quoted.numeric <- function(x, env = parent.frame()) {
+  structure(x, env = env, class = c("quoted", "numeric"))
 }
-as.quoted.formula <- function(x) {
+as.quoted.formula <- function(x, env = parent.frame()) {
   simplify <- function(x) {
     if (length(x) == 2 && x[[1]] == as.name("~")) {
       return(simplify(x[[2]]))
@@ -146,21 +159,25 @@ as.quoted.formula <- function(x) {
     }
   }
 
-  structure(
-    simplify(x),
-    class = "quoted"
-  )
+  structure(simplify(x), env = env, class = "quoted")
 }
-as.quoted.quoted <- function(x) x
-as.quoted.NULL <- function(x) structure(list(), class = "quoted")
-as.quoted.name <- function(x) structure(list(x), class = "quoted")
-as.quoted.factor <- function(x) as.quoted(as.character(x))
+as.quoted.quoted <- function(x, env = parent.frame()) x
+as.quoted.NULL <- function(x, env = parent.frame()) {
+  structure(list(), env = env, class = "quoted")
+}
+as.quoted.name <- function(x, env = parent.frame()) {
+  structure(list(x), env = env, class = "quoted")
+}
+as.quoted.factor <- function(x, env = parent.frame()) {
+  as.quoted(as.character(x), env)
+}
 c.quoted <- function(..., recursive = FALSE) {
-  structure(NextMethod("c"), class = "quoted")
+  structure(NextMethod("c"), class = "quoted", 
+    env = attr(list(...)[[1]], "env"))
 }
 
 "[.quoted" <- function(x, i, ...) {
-  structure(NextMethod("["), class = "quoted")
+  structure(NextMethod("["), env = attr(x, "env"), class = "quoted")
 }
 
 #' Is a formula?

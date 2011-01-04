@@ -1,25 +1,26 @@
 \name{dlply}
 \alias{dlply}
 \title{Split data frame, apply function, and return results in a list.}
-\usage{dlply(.data, .variables, .fun, ..., .progress="none", .drop=TRUE,
-    .parallel=FALSE)}
+\usage{dlply(.data, .variables, .fun, ..., .progress="none",
+    .drop=TRUE, .parallel=FALSE)}
 
 \description{
-  Split data frame, apply function, and return results in a list. For
-  each subset of a data frame, apply function then combine results into
-  a list
+  Split data frame, apply function, and return results in a
+  list. For each subset of a data frame, apply function
+  then combine results into a list
 }
 
 \details{
-  All plyr functions use the same split-apply-combine strategy: they
-  split the input into simpler pieces, apply \code{.fun} to each piece,
-  and then combine the pieces into a single data structure.  This
-  function splits data frames by variables and combines the result into
-  a list.  If there are no results, then this function will return a
+  All plyr functions use the same split-apply-combine
+  strategy: they split the input into simpler pieces, apply
+  \code{.fun} to each piece, and then combine the pieces
+  into a single data structure.  This function splits data
+  frames by variables and combines the result into a list.
+  If there are no results, then this function will return a
   list of length 0 (\code{list()}).
 
-  \code{dlply} is similar to \code{\link{by}} except that the results
-  are returned in a different format.
+  \code{dlply} is similar to \code{\link{by}} except that
+  the results are returned in a different format.
 }
 \keyword{manip}
 \value{if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)}
@@ -34,7 +35,7 @@ data be preserved (FALSE) or dropped (TRUE, default)}
   \item{.parallel}{if \code{TRUE}, apply function in parallel, using parallel 
 backend provided by foreach}
 }
-\examples{linmod <- function(df) lm(rbi ~ year, data = transform(df, year = year - min(year)))
+\examples{linmod <- function(df) lm(rbi ~ year, data = mutate(df, year = year - min(year)))
 models <- dlply(baseball, .(id), linmod)
 models[[1]]
 
