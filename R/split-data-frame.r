@@ -13,7 +13,7 @@
 #' 
 #' @seealso \code{\link{.}} for quoting variables, \code{\link{split}}
 #' @param data data frame
-#' @param .variables a \link{quoted} list of variables, a formula, or character vector.  \code{NULL} will not split the data
+#' @param .variables a \link{quoted} list of variables
 #' @param drop drop unnused factor levels?
 #' @return a list of data.frames, with attributes that record split details
 #' @keywords internal
@@ -31,21 +31,26 @@
 #' plyr:::splitter_d(mtcars, .(cyl3, vs))
 #' plyr:::splitter_d(mtcars, .(cyl3, vs), drop = FALSE)
 splitter_d <- function(data, .variables = NULL, drop = TRUE) {
+  stopifnot(is.quoted(.variables))
+  
+  
   if (length(.variables) == 0) {
     splitv <- rep(1, nrow(data))
     split_labels <- NULL
     attr(splitv, "n") <- max(splitv)
+    vars <- character(0)
   } else {
     splits <- eval.quoted(.variables, data)
 
     splitv <- id(splits, drop = drop)
     split_labels <- split_labels(splits, drop = drop, id = splitv)
+    vars <- unlist(lapply(.variables, all.vars))
   }
   
   index <- split_indices(seq_along(splitv), as.integer(splitv), 
     attr(splitv, "n"))
 
-  il <- indexed_df(data, index)
+  il <- indexed_df(data, index, vars)
   
   structure(
     il,
@@ -70,8 +75,13 @@ split_labels <- function(splits, drop, id = plyr::id(splits, drop = TRUE)) {
     representative <- which(!duplicated(id))[order(unique(id))]
     quickdf(lapply(splits, function(x) x[representative]))
   } else {
-    unique_values <- llply(splits, function(x) sort(unique(x)))
+    unique_values <- llply(splits, ulevels)
     names(unique_values) <- names(splits)
     rev(expand.grid(rev(unique_values), stringsAsFactors = FALSE))
   }
+}
+
+ulevels <- function(x) {
+  if (is.factor(x)) return(levels(x))
+  sort(unique(x))
 }

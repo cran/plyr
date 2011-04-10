@@ -1,11 +1,11 @@
 \name{mutate}
 \alias{mutate}
-\title{Mutate a data frame by adding new columns or replacing existing.}
+\title{Mutate a data frame by adding new or replacing existing columns.}
 \usage{mutate(.data, ...)}
 
 \description{
-  Mutate a data frame by adding new columns or replacing
-  existing.
+  Mutate a data frame by adding new or replacing existing
+  columns.
 }
 
 \details{
@@ -19,7 +19,8 @@
   large data frames.
 }
 \seealso{\code{\link{subset}}, \code{\link{summarise}},
-\code{\link{arrange}}}
+\code{\link{arrange}}.  For another somewhat different approach to
+solving the same problem, see \code{\link{within}}.}
 \arguments{
   \item{.data}{the data frame to transform}
   \item{...}{named parameters giving definitions of new columns.}

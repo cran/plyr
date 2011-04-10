@@ -18,7 +18,8 @@
 \alias{numcolwise}
 \arguments{
   \item{.fun}{function}
-  \item{.cols}{either function that tests columns for inclusion, or a quoted object giving which columns to process}
+  \item{.cols}{either a function that tests columns for inclusion, or a
+quoted object giving which columns to process}
 }
 \examples{# Count number of missing values
 nmissing <- function(x) sum(is.na(x))

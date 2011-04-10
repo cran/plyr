@@ -1,4 +1,4 @@
-#' Mutate a data frame by adding new columns or replacing existing.
+#' Mutate a data frame by adding new or replacing existing columns.
 #'
 #' This function is very similar to \code{\link{transform}} but it executes
 #' the transformations iteratively so that later transformations can use the
@@ -11,7 +11,8 @@
 #' @param .data the data frame to transform
 #' @param ... named parameters giving definitions of new columns.
 #' @seealso \code{\link{subset}}, \code{\link{summarise}},
-#'   \code{\link{arrange}}
+#'   \code{\link{arrange}}.  For another somewhat different approach to
+#'   solving the same problem, see \code{\link{within}}.
 #' @export
 #' @examples
 #' # Examples from transform

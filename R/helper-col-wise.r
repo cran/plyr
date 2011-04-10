@@ -6,7 +6,8 @@
 #' on discrete and numeric variables respectively.
 #' 
 #' @param .fun function
-#' @param .cols either function that tests columns for inclusion, or a quoted object giving which columns to process
+#' @param .cols either a function that tests columns for inclusion, or a
+#'   quoted object giving which columns to process
 #' @aliases colwise catcolwise numcolwise
 #' @export colwise numcolwise catcolwise
 #' @examples
@@ -42,7 +43,7 @@
 colwise <- function(.fun, .cols = true) {
   if (!is.function(.cols)) {
     .cols <- as.quoted(.cols)
-    filter <- function(df) as.data.frame(eval.quoted(.cols, df))
+    filter <- function(df) eval.quoted(.cols, df)
   } else {
     filter <- function(df) Filter(.cols, df)
   }
@@ -50,9 +51,9 @@ colwise <- function(.fun, .cols = true) {
   function(df, ...) {
     stopifnot(is.data.frame(df))
     filtered <- filter(df)
-    if (ncol(filtered) == 0) return(data.frame())
+    if (length(filtered) == 0) return(data.frame())
     
-    df <- as.data.frame(lapply(filtered, .fun, ...))
+    df <- quickdf(lapply(filtered, .fun, ...))
     names(df) <- names(filtered)
     df
   }

@@ -1,5 +1,5 @@
-#' Quote variables.
-#' Create a list of unevaluated expressions for later evaluation
+#' Quote variables to create a list of unevaluated expressions for later
+#' evaluation.
 #' 
 #' This function is similar to \code{\link{~}} in that it is used to
 #' capture the name of variables, not their current value.  This is used
@@ -61,14 +61,15 @@ print.quoted <- function(x, ...) str(x)
 #' @S3method names quoted
 #' @method names quoted
 names.quoted <- function(x) {
-  part_names <- unlist(lapply(x, deparse))
+  deparse2 <- function(x) paste(deparse(x), collapse = "")
+  part_names <- unlist(lapply(x, deparse2))
   user_names <- names(unclass(x))
 
   if (!is.null(user_names)) {
     part_names[user_names != ""] <- user_names[user_names != ""]
   }
   
-  part_names
+  unname(part_names)
 }
 
 #' Evaluate a quoted list of variables.

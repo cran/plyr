@@ -69,6 +69,7 @@ output_template <- function(dfs, nrows) {
     matching <- intersect(names(df), vars[!seen])
     for(var in matching) {
       value <- df[[var]]
+
       if (is.vector(value) && is.atomic(value)) {
         output[[var]] <- rep(NA, nrows)
       } else if (is.factor(value)) {
@@ -78,6 +79,9 @@ output_template <- function(dfs, nrows) {
         output[[var]] <- vector("list", nrows)
       } else if (is.matrix(value)) {
         is_matrix[var] <- TRUE
+      } else if (inherits(value, "POSIXt")) {
+        output[[var]] <- as.POSIXct(rep(NA, nrows))
+        attr(output[[var]], "tzone") <- attr(value, "tzone")
       } else {
         output[[var]] <- rep(NA, nrows)
         class(output[[var]]) <- class(value)
@@ -91,7 +95,8 @@ output_template <- function(dfs, nrows) {
   # Set up factors
   for(var in vars[is_factor]) {
     all <- unique(lapply(dfs, function(df) levels(df[[var]])))
-    levels(output[[var]]) <- unique(unlist(all))
+    output[[var]] <- factor(output[[var]], levels = unique(unlist(all)),
+      exclude = NULL)
   }
 
   # Set up matrices

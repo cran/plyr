@@ -19,7 +19,7 @@
 #'   Data Analysis. Journal of Statistical Software, 40(1), 1-29. 
 #'   \url{http://www.jstatsoft.org/v40/i01/}.
 l_ply <- function(.data, .fun = NULL, ..., .progress = "none", .print = FALSE) {
-  if (is.character(.fun)) .fun <- do.call("each", as.list(.fun))
+  if (is.character(.fun) || is.list(.fun)) .fun <- each(.fun)
   if (!is.function(.fun)) stop(".fun is not a function.")
   
   progress <- create_progress_bar(.progress)
