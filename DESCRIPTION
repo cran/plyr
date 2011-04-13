@@ -1,7 +1,7 @@
 Package: plyr
 Type: Package
 Title: Tools for splitting, applying and combining data
-Version: 1.5
+Version: 1.5.1
 Author: Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Description: plyr is a set of tools that solves a common set of
@@ -31,6 +31,6 @@ Collate: 'dimensions.r' 'helper-arrange.r' 'helper-col-wise.r'
         'rbind.r' 'simplify-array.r' 'simplify-data-frame.r'
         'simplify-vector.r' 'split-array.r' 'split-data-frame.r'
         'split-indices.r' 'split.r' 'utils.r'
-Packaged: 2011-04-10 14:59:21 UTC; hadley
+Packaged: 2011-04-13 12:50:45 UTC; hadley
 Repository: CRAN
-Date/Publication: 2011-04-10 19:27:24
+Date/Publication: 2011-04-13 14:24:00
