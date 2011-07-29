@@ -1,9 +1,11 @@
 #' List to array.
+#'
 #' Reduce/simplify a list of homogenous objects to an array
 #' 
 #' @param res list of input data
 #' @param labels a data frame of labels, one row for each element of res
 #' @param .drop should extra dimensions be dropped (TRUE) or preserved (FALSE)
+#' @family list simplification functions
 #' @keywords internal
 list_to_array <- function(res, labels = NULL, .drop = FALSE) {
   if (length(res) == 0) return(vector())

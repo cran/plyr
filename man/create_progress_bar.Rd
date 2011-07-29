@@ -1,13 +1,18 @@
 \name{create_progress_bar}
 \alias{create_progress_bar}
 \title{Create progress bar.}
-\usage{create_progress_bar(name="none", ...)}
-
-\description{
-  Create progress bar. Create progress bar object from text
-  string.
+\usage{
+  create_progress_bar(name = "none", ...)
 }
+\arguments{
+  \item{name}{type of progress bar to create}
 
+  \item{...}{other arguments passed onto progress bar
+  function}
+}
+\description{
+  Create progress bar object from text string.
+}
 \details{
   Progress bars give feedback on how apply step is
   proceeding.  This is mainly useful for long running
@@ -31,13 +36,15 @@
   progress bar object yourself if you want more control
   over its apperance. See the examples.
 }
-\seealso{\code{\link{progress_none}}, \code{\link{progress_text}}, \code{\link{progress_tk}}, \code{\link{progress_win}}}
-\keyword{utilities}
-\arguments{
-  \item{name}{type of progress bar to create}
-  \item{...}{other arguments passed onto progress bar function}
+\examples{
+l_ply(1:100, identity, .progress = "none")
+l_ply(1:100, identity, .progress = "tk")
+l_ply(1:100, identity, .progress = "text")
+l_ply(1:100, identity, .progress = progress_text(char = "-"))
 }
-\examples{l_ply(1:1000, identity, .progress = "none")
-l_ply(1:1000, identity, .progress = "tk")
-l_ply(1:1000, identity, .progress = "text")
-l_ply(1:1000, identity, .progress = progress_text(char = "-"))}
+\seealso{
+  \code{\link{progress_none}}, \code{\link{progress_text}},
+  \code{\link{progress_tk}}, \code{\link{progress_win}}
+}
+\keyword{utilities}
+

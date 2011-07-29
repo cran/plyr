@@ -1,15 +1,15 @@
-\name{get-split}
-\title{Subset splits.}
-\usage{\method{[}{split} (x, i, ...)}
-
-\description{
-  Subset splits. Subset splits, ensuring that labels keep
-  matching
-}
-\keyword{internal}
+\name{[.split}
 \alias{[.split}
+\title{Subset splits.}
 \arguments{
   \item{x}{split object}
+
   \item{i}{index}
+
   \item{...}{unused}
 }
+\description{
+  Subset splits, ensuring that labels keep matching
+}
+\keyword{internal}
+

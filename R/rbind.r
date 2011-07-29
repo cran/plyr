@@ -1,16 +1,18 @@
 #' Combine data.frames by row, filling in missing columns.
+#'
 #' \code{rbind}s a list of data frames filling missing columns with NA.
 #' 
-#' This is an enhancement to \code{\link{rbind}} which adds in columns
+#' This is an enhancement to \code{\link{rbind}} that adds in columns
 #' that are not present in all inputs, accepts a list of data frames, and 
 #' operates substantially faster.
 #'
 #' Column names and types in the output will appear in the order in which 
-#' they were encoutered. No checking is performed to ensure that each column
+#' they were encountered. No checking is performed to ensure that each column
 #' is of consistent type in the inputs.
 #' 
 #' @param ... input data frames to row bind together
 #' @keywords manip
+#' @family binding functions
 #' @return a single data frame
 #' @export
 #' @examples
@@ -74,10 +76,8 @@ output_template <- function(dfs, nrows) {
       if (is.vector(value) && is.atomic(value)) {
         output[[var]] <- rep(NA, nrows)
       } else if (is.factor(value)) {
-        output[[var]] <- factor(rep(NA, nrows))
+        output[[var]] <- factor(rep(NA, nrows), ordered = is.ordered(value))
         is_factor[var] <- TRUE
-      } else if (is.list(value)) {
-        output[[var]] <- vector("list", nrows)
       } else if (is.matrix(value)) {
         is_matrix[var] <- TRUE
       } else if (is.array(value)) {
@@ -85,9 +85,12 @@ output_template <- function(dfs, nrows) {
       } else if (inherits(value, "POSIXt")) {
         output[[var]] <- as.POSIXct(rep(NA, nrows))
         attr(output[[var]], "tzone") <- attr(value, "tzone")
+      } else if (is.list(value)) {
+        output[[var]] <- vector("list", nrows)
       } else {
         output[[var]] <- rep(NA, nrows)
         class(output[[var]]) <- class(value)
+        attributes(output[[var]]) <- attributes(value)
       }
     }
 

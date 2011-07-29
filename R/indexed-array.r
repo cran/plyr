@@ -1,4 +1,5 @@
 #' An indexed array.
+#'
 #' Create a indexed array, a space efficient way of indexing into a large
 #' array.
 #' 
@@ -39,8 +40,10 @@ indexed_array <- function(env, index) {
   )
 }
 
+#' @S3method length indexed_array
 length.indexed_array <- function(x) nrow(x$index)
 
+#' @S3method [[ indexed_array
 "[[.indexed_array" <- function(x, i) {
   indices <- paste(x$index[i, ,drop=TRUE], collapse = ", ")
 
@@ -52,4 +55,5 @@ length.indexed_array <- function(x) nrow(x$index)
   eval(parse(text = call))
 }
 
+#' @S3method names indexed
 names.indexed_array <- function(x) rownames(x$index)

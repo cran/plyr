@@ -1,31 +1,15 @@
 #' Split list, apply function, and return results in an array.
-#' For each element of a list, apply function then combine results into an array
-#' 
-#' All plyr functions use the same split-apply-combine strategy: they split the
-#' input into simpler pieces, apply \code{.fun} to each piece, and then combine
-#' the pieces into a single data structure.  This function splits lists by
-#' elements and combines the result into an array.  If there are no results,
-#' then this function will return a vector of length 0 (\code{vector()}).
-#' 
-#' \code{laply} is very similar in spirit to \code{\link{sapply}} except that
-#' it will always return an array, and the output is transposed with respect
-#' \code{sapply} - each element of the list corresponds to a column, not a 
-#' row.
-#' 
-#' 
-#' @keywords manip
-#' @param .data input list
-#' @param .fun function to apply to each piece
-#' @param ... other arguments passed on to \code{.fun}
-#' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
-#' @param .drop should extra dimensions of length 1 be dropped, simplifying the output.  Defaults to \code{TRUE}
-#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
-#'   backend provided by foreach
-#' @return if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
+#'
+#' For each element of a list, apply function then combine results into an
+#' array. \code{laply} is similar in spirit to \code{\link{sapply}} except
+#' that it will always return an array, and the output is transposed with
+#' respect \code{sapply} - each element of the list corresponds to a column,
+#' not a row.
+#'
+#' @template ply
+#' @template l-
+#' @template -a
 #' @export
-#' @references Hadley Wickham (2011). The Split-Apply-Combine Strategy for
-#'   Data Analysis. Journal of Statistical Software, 40(1), 1-29. 
-#'   \url{http://www.jstatsoft.org/v40/i01/}.
 #' @examples
 #' laply(baseball, is.factor)
 #' # cf
@@ -48,31 +32,31 @@ laply <-  function(.data, .fun = NULL, ..., .progress = "none", .drop = TRUE, .p
 
 
 #' Split data frame, apply function, and return results in an array.
-#' For each subset of data frame, apply function then combine results into an array
+#'
+#' For each subset of data frame, apply function then combine results into
+#' an array.  \code{daply} with a function that operates column-wise is
+#' similar to \code{\link{aggregate}}. 
 #' 
-#' All plyr functions use the same split-apply-combine strategy: they split the
-#' input into simpler pieces, apply \code{.fun} to each piece, and then combine
-#' the pieces into a single data structure.  This function splits data frames
-#' by variable and combines the result into an array.  If there are no results,
-#' then this function will return a vector of length 0 (\code{vector()}).
-#' 
-#' \code{daply} with a function that operates column-wise is similar to
-#' \code{\link{aggregate}}. 
-#' 
-#' @keywords manip
+#' @template ply
+#' @section Input: This function splits data frames by variables.
+#' @section Output:
+#'   If there are no results, then this function will return a vector of
+#'   length 0 (\code{vector()}).
 #' @param .data data frame to be processed
-#' @param .variables variables to split data frame by, as quoted variables, a formula or character vector
-#' @param .fun function to apply to each piece
-#' @param ... other arguments passed on to \code{.fun}
-#' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
-#' @param .drop should extra dimensions of length 1 be dropped, simplifying the output.  Defaults to \code{TRUE}
+#' @param .variables variables to split data frame by, as quoted
+#'   variables, a formula or character vector
+#' @param .drop_i should combinations of variables that do not appear in the 
+#'   input data be preserved (FALSE) or dropped (TRUE, default)
 #' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
 #'   backend provided by foreach
-#' @return if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
+#' @return if results are atomic with same type and dimensionality, a
+#'   vector, matrix or array; otherwise, a list-array (a list with
+#'   dimensions)
+#' @param .drop_o should extra dimensions of length 1 in the output be
+#'   dropped, simplifying the output.  Defaults to \code{TRUE}
+#' @family array output
+#' @family data frame input
 #' @export
-#' @references Hadley Wickham (2011). The Split-Apply-Combine Strategy for
-#'   Data Analysis. Journal of Statistical Software, 40(1), 1-29. 
-#'   \url{http://www.jstatsoft.org/v40/i01/}.
 #' @examples
 #' daply(baseball, .(year), nrow)
 #'
@@ -82,47 +66,27 @@ laply <-  function(.data, .fun = NULL, ..., .progress = "none", .drop = TRUE, .p
 #' daply(baseball[, c(2, 6:9)], .(year), mean)
 #' daply(baseball[, 6:9], .(baseball$year), mean)
 #' daply(baseball, .(year), function(df) mean(df[, 6:9]))
-daply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop = TRUE, .parallel = FALSE) {
+daply <- function(.data, .variables, .fun = NULL, ..., .progress = "none", .drop_i = TRUE, .drop_o = TRUE, .parallel = FALSE) {
   .variables <- as.quoted(.variables)
-  pieces <- splitter_d(.data, .variables)
+  pieces <- splitter_d(.data, .variables, drop = .drop_i)
   
   laply(.data = pieces, .fun = .fun, ..., 
-    .progress = .progress, .drop = .drop, .parallel = .parallel)
+    .progress = .progress, .drop = .drop_o, .parallel = .parallel)
 }
 
 #' Split array, apply function, and return results in an array.
-#' For each slice of an array, apply function then combine results into an array
-#' 
-#' All plyr functions use the same split-apply-combine strategy: they split the
-#' input into simpler pieces, apply \code{.fun} to each piece, and then combine
-#' the pieces into a single data structure.  This function splits matrices,
-#' arrays and data frames by dimensions and combines the result into an array.
-#' If there are no results, then this function will return a vector of length 0 (\code{vector()}).
-#' 
+#'
+#' For each slice of an array, apply function, keeping results as an array.
 #' This function is very similar to \code{\link{apply}}, except that it will
 #' always return an array, and when the function returns >1 d data structures,
 #' those dimensions are added on to the highest dimensions, rather than the
 #' lowest dimensions.  This makes \code{aaply} idempotent, so that
 #' \code{apply(input, X, identity)} is equivalent to \code{aperm(input, X)}.
 #' 
-#' 
-#' @keywords manip
-#' @param .data matrix, array or data frame to be processed
-#' @param .margins a vector giving the subscripts to split up \code{data} by.  1 splits up by rows, 2 by columns and c(1,2) by rows and columns, and so on for higher dimensions
-#' @param .fun function to apply to each piece
-#' @param ... other arguments passed on to \code{.fun}
-#' @param .expand if \code{.data} is a data frame, should output be 1d 
-#'   (expand = FALSE), with an element for each row; or nd (expand = TRUE),
-#'    with a dimension for each variable.
-#' @param .progress name of the progress bar to use, see \code{\link{create_progress_bar}}
-#' @param .drop should extra dimensions of length 1 be dropped, simplifying the output.  Defaults to \code{TRUE}
-#' @param .parallel if \code{TRUE}, apply function in parallel, using parallel 
-#'   backend provided by foreach
-#' @return if results are atomic with same type and dimensionality, a vector, matrix or array; otherwise, a list-array (a list with dimensions)
+#' @template ply
+#' @template a-
+#' @template -a
 #' @export
-#' @references Hadley Wickham (2011). The Split-Apply-Combine Strategy for
-#'   Data Analysis. Journal of Statistical Software, 40(1), 1-29. 
-#'   \url{http://www.jstatsoft.org/v40/i01/}.
 #' @examples
 #' dim(ozone)
 #' aaply(ozone, 1, mean)

@@ -1,4 +1,5 @@
 #' Split an array by .margins.
+#'
 #' Split a 2d or higher data structure into lower-d pieces based
 #' 
 #' This is the workhorse of the \code{a*ply} functions.  Given a >1 d 
@@ -19,6 +20,7 @@
 #'   (expand = FALSE), with an element for each row; or nd (expand = TRUE), 
 #'   with a dimension for each variable.
 #' @return a list of lower-d slices, with attributes that record split details
+#' @family splitter functions
 #' @keywords internal
 #' @examples
 #' plyr:::splitter_a(mtcars, 1)

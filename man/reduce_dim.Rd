@@ -1,12 +1,14 @@
 \name{reduce_dim}
 \alias{reduce_dim}
 \title{Reduce dimensions.}
-\usage{reduce_dim(x)}
-
-\description{
-  Reduce dimensions. Remove extraneous dimensions
+\usage{
+  reduce_dim(x)
 }
-\keyword{internal}
 \arguments{
   \item{x}{array}
 }
+\description{
+  Remove extraneous dimensions
+}
+\keyword{internal}
+

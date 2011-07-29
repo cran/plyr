@@ -1,4 +1,5 @@
 #' Create progress bar.
+#'
 #' Create progress bar object from text string.
 #' 
 #' Progress bars give feedback on how apply step is proceeding.  This
@@ -25,10 +26,10 @@
 #' @keywords utilities
 #' @export
 #' @examples
-#' l_ply(1:1000, identity, .progress = "none")
-#' l_ply(1:1000, identity, .progress = "tk")
-#' l_ply(1:1000, identity, .progress = "text")
-#' l_ply(1:1000, identity, .progress = progress_text(char = "-"))
+#' l_ply(1:100, identity, .progress = "none")
+#' l_ply(1:100, identity, .progress = "tk")
+#' l_ply(1:100, identity, .progress = "text")
+#' l_ply(1:100, identity, .progress = progress_text(char = "-"))
 create_progress_bar <- function(name = "none", ...) {
   if (!is.character(name)) return(name)
   name <- paste("progress", name, sep="_")
@@ -42,12 +43,14 @@ create_progress_bar <- function(name = "none", ...) {
 }
 
 #' Null progress bar
+#'
 #' A progress bar that does nothing
 #' 
 #' This the default progress bar used by plyr functions.  It's very simple to
 #' understand - it does nothing!
 #' 
 #' @keywords internal
+#' @family progress bars
 #' @export
 #' @examples
 #' l_ply(1:100, identity, .progress = "none")
@@ -60,6 +63,7 @@ progress_none <- function() {
 }
 
 #' Text progress bar.
+#'
 #' A textual progress bar
 #' 
 #' This progress bar displays a textual progress bar that works on all 
@@ -68,6 +72,7 @@ progress_none <- function() {
 #'
 #' @param style style of text bar, see Details section of \code{\link{txtProgressBar}}
 #' @param ... other arugments passed on to \code{\link{txtProgressBar}}
+#' @family progress bars
 #' @export
 #' @examples
 #' l_ply(1:100, identity, .progress = "text")
@@ -90,6 +95,7 @@ progress_text <- function(style = 3, ...) {
 }
 
 #' Graphical progress bar, powered by Tk.
+#'
 #' A graphical progress bar displayed in a Tk window
 #' 
 #' This graphical progress will appear in a separate window.
@@ -98,6 +104,7 @@ progress_text <- function(style = 3, ...) {
 #' @param label progress bar label (inside window)
 #' @param ... other arguments passed on to \code{\link[tcltk]{tkProgressBar}}
 #' @seealso \code{\link[tcltk]{tkProgressBar}} for the function that powers this progress bar
+#' @family progress bars
 #' @export
 #' @examples
 #' l_ply(1:100, identity, .progress = "tk")
@@ -122,6 +129,7 @@ progress_tk <- function(title = "plyr progress", label = "Working...", ...) {
 }
 
 #' Graphical progress bar, powered by Windows.
+#'
 #' A graphical progress bar displayed in a separate window
 #' 
 #' This graphical progress only works on Windows.
@@ -130,6 +138,7 @@ progress_tk <- function(title = "plyr progress", label = "Working...", ...) {
 #' @param ... other arguments passed on to \code{winProgressBar}
 #' @seealso \code{winProgressBar} for the function that powers this progress bar
 #' @export
+#' @family progress bars
 #' @examples
 #' if(exists("winProgressBar")) {
 #' l_ply(1:100, identity, .progress = "win")

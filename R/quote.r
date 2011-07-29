@@ -11,7 +11,7 @@
 #' to ensure that the values are extracted from the correct frame.  Substitute
 #' tricks also make it difficult to program against the functions that use
 #' them, while the \code{quoted} class provides 
-#' \code{\link{as.quoted.character}} to convert strings to the appropriate
+#' \code{as.quoted.character} to convert strings to the appropriate
 #' data structure.
 #' 
 #' @param ... unevaluated expressions to be recorded.  Specify names if you
@@ -21,7 +21,7 @@
 #' @return list of symbol and language primitives
 #' @aliases . quoted is.quoted
 #' @export . is.quoted
-#' @name quoted
+#' @rdname quoted
 #' @examples
 #' .(a, b, c)
 #' .(first = a, second = b, third = c)
@@ -45,6 +45,7 @@
 is.quoted <- function(x) inherits(x, "quoted")
 
 #' Print quoted variables.
+#'
 #' Display the \code{\link{str}}ucture of quoted variables
 #' 
 #' @keywords internal
@@ -53,6 +54,7 @@ is.quoted <- function(x) inherits(x, "quoted")
 print.quoted <- function(x, ...) str(x)
 
 #' Compute names of quoted variables.
+#'
 #' Figure out names of quoted variables, using specified names if they exist,
 #' otherwise converting the values to character strings.  This may create 
 #' variable names that can only be accessed using \code{``}.
@@ -73,6 +75,7 @@ names.quoted <- function(x) {
 }
 
 #' Evaluate a quoted list of variables.
+#'
 #' Evaluates quoted variables in specified environment
 #' 
 #' @return a list
@@ -99,6 +102,7 @@ eval.quoted <- function(exprs, envir = NULL, enclos = NULL, try = FALSE) {
 }
 
 #' Convert input to quoted variables.
+#'
 #' Convert characters, formulas and calls to quoted .variables
 #' 
 #' This method is called by default on all plyr functions that take a 
@@ -109,40 +113,35 @@ eval.quoted <- function(exprs, envir = NULL, enclos = NULL, try = FALSE) {
 #' 
 #' @return a list of quoted variables
 #' @seealso \code{\link{.}}
-#' @aliases as.quoted.call as.quoted.character as.quoted.formula
-#'  as.quoted.quoted as.quoted.NULL as.quoted.numeric c.quoted as.quoted
-#'  [.quoted
 #' @param x input to quote
 #' @param env environment in which unbound symbols in expression should be
 #'   evaluated. Defaults to the environment in which \code{as.quoted} was 
 #'   executed.
-#' @S3method as.quoted call
-#' @S3method as.quoted character
-#' @S3method as.quoted factor
-#' @S3method as.quoted formula
-#' @S3method as.quoted quoted
-#' @S3method as.quoted name
-#' @S3method as.quoted NULL
-#' @S3method as.quoted numeric
-#' @S3method "[" quoted
-#' @S3method c quoted
+#' @export
 #' @examples
 #' as.quoted(c("a", "b", "log(d)"))
 #' as.quoted(a ~ b + log(d))
-#' @export
 as.quoted <- function(x, env = parent.frame()) UseMethod("as.quoted")
+
+#' @S3method as.quoted call
 as.quoted.call <- function(x, env = parent.frame()) {
   structure(as.list(x)[-1], env = env, class = "quoted")
 }
+
+#' @S3method as.quoted character
 as.quoted.character <- function(x, env = parent.frame()) {
   structure(
     lapply(x, function(x) parse(text = x)[[1]]), 
     env = env, class = "quoted"
   )
 }
+
+#' @S3method as.quoted numeric
 as.quoted.numeric <- function(x, env = parent.frame()) {
   structure(x, env = env, class = c("quoted", "numeric"))
 }
+
+#' @S3method as.quoted formula
 as.quoted.formula <- function(x, env = parent.frame()) {
   simplify <- function(x) {
     if (length(x) == 2 && x[[1]] == as.name("~")) {
@@ -162,21 +161,32 @@ as.quoted.formula <- function(x, env = parent.frame()) {
 
   structure(simplify(x), env = env, class = "quoted")
 }
+
+#' @S3method as.quoted quoted
 as.quoted.quoted <- function(x, env = parent.frame()) x
+
+#' @S3method as.quoted NULL
 as.quoted.NULL <- function(x, env = parent.frame()) {
   structure(list(), env = env, class = "quoted")
 }
+
+#' @S3method as.quoted name
 as.quoted.name <- function(x, env = parent.frame()) {
   structure(list(x), env = env, class = "quoted")
 }
+
+#' @S3method as.quoted factor
 as.quoted.factor <- function(x, env = parent.frame()) {
   as.quoted(as.character(x), env)
 }
+
+#' @S3method c quoted
 c.quoted <- function(..., recursive = FALSE) {
   structure(NextMethod("c"), class = "quoted", 
     env = attr(list(...)[[1]], "env"))
 }
 
+#' @S3method [ quoted
 "[.quoted" <- function(x, i, ...) {
   structure(NextMethod("["), env = attr(x, "env"), class = "quoted")
 }

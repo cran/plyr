@@ -1,13 +1,16 @@
 \name{rbind.fill.matrix}
 \alias{rbind.fill.matrix}
 \title{Bind matrices by row, and fill missing columns with NA.}
-\usage{rbind.fill.matrix(...)}
-
-\description{
-  Bind matrices by row, and fill missing columns with NA.
+\usage{
+  rbind.fill.matrix(...)
 }
-
-\details{
+\arguments{
+  \item{...}{the matrices to rbind}
+}
+\value{
+  a matrix with column names
+}
+\description{
   The matrices are bound together using their column names
   or the column indices (in that order of precedence.)
   Numeric columns may be converted to character beforehand,
@@ -16,7 +19,8 @@
   column with name \code{"1"} is merged with the first
   column of a matrix without name and so on. The returned
   matrix will always have column names.
-
+}
+\details{
   Vectors are converted to 1-column matrices.
 
   Matrices of factors are not supported. (They are anyways
@@ -27,15 +31,8 @@
 
   Row names are ignored.
 }
-\value{a matrix with column names}
-\author{C. Beleites}
-\seealso{\code{\link[base]{rbind}}, \code{\link[base]{cbind}},
-\code{\link[plyr]{rbind.fill}}}
-\keyword{manip}
-\arguments{
-  \item{...}{the matrices to rbind}
-}
-\examples{A <- matrix (1:4, 2)
+\examples{
+A <- matrix (1:4, 2)
 B <- matrix (6:11, 2)
 A
 B
@@ -45,4 +42,16 @@ colnames (A) <- c (3, 1)
 A
 rbind.fill.matrix (A, B)
 
-rbind.fill.matrix (A, 99)}
+rbind.fill.matrix (A, 99)
+}
+\author{
+  C. Beleites
+}
+\seealso{
+  \code{\link[base]{rbind}}, \code{\link[base]{cbind}},
+  \code{\link[plyr]{rbind.fill}}
+
+  Other binding functions: \code{\link{rbind.fill}}
+}
+\keyword{manip}
+

@@ -1,4 +1,5 @@
 #' Column-wise function.
+#'
 #' Turn a function that operates on a vector into a function that operates
 #' column-wise on a data.frame.
 #'
@@ -50,6 +51,7 @@ colwise <- function(.fun, .cols = true) {
   
   function(df, ...) {
     stopifnot(is.data.frame(df))
+    df <- strip_splits(df)
     filtered <- filter(df)
     if (length(filtered) == 0) return(data.frame())
     

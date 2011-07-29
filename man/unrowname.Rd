@@ -1,12 +1,14 @@
 \name{unrowname}
 \alias{unrowname}
 \title{Un-rowname.}
-\usage{unrowname(x)}
-
-\description{
-  Un-rowname. Strip rownames from an object
+\usage{
+  unrowname(x)
 }
-\keyword{internal}
 \arguments{
   \item{x}{data frame}
 }
+\description{
+  Strip rownames from an object
+}
+\keyword{internal}
+

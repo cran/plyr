@@ -4,14 +4,19 @@ test_that("variable classes are preserved", {
   a <- data.frame(a = factor(letters[1:3]), b = 1:3, c = date())
   b <- data.frame(
     a = factor(letters[3:5]), 
-    d = as.Date(c("2008-01-01", "2009-01-01", "2010-01-01")),
-    e = I (matrix (1:6, nrow = 3)))
-  ab1 <- rbind.fill(a, b)[, letters[1:5]]
-  ab2 <- rbind.fill(b, a)[c(4:6, 1:3), letters[1:5]]
+    d = as.Date(c("2008-01-01", "2009-01-01", "2010-01-01")))
+  b$e <- as.POSIXlt(as.Date(c("2008-01-01", "2009-01-01", "2010-01-01"))) 
+  b$f <- matrix (1:6, nrow = 3)
+  
+  ab1 <- rbind.fill(a, b)[, letters[1:6]]
+  ab2 <- rbind.fill(b, a)[c(4:6, 1:3), letters[1:6]]
   ab2$a <- factor(ab2$a, levels(ab1$a))
   rownames(ab2) <- NULL
   
   expect_that(ab1, equals(ab2))
+  expect_that(unname(lapply(ab1, class)), 
+    equals(list("factor", "integer", "factor", "Date", c("POSIXct", "POSIXt"),
+                "matrix")))
 })
 
 test_that("same as rbind for simple cases", {
@@ -80,4 +85,21 @@ test_that("arrays are ok", {
 
   df2 <- rbind.fill(df, df)
   expect_that(df2$x, is_equivalent_to(rbind(df, df)$x))
+})
+
+test_that("attributes are preserved", {
+  d1 <- data.frame(a = runif(10), b = runif(10))
+  d2 <- data.frame(a = runif(10), b = runif(10))
+
+  attr(d1$b, "foo") <- "one"
+  attr(d1$b, "bar") <- "bar"
+  attr(d2$b, "foo") <- "two"
+  attr(d2$b, "baz") <- "baz"
+  
+  d12 <- rbind.fill(d1, d2)
+  d21 <- rbind.fill(d2, d1)
+  
+  expect_that(attr(d12$b, "foo"), equals("one"))
+  expect_that(attr(d21$b, "foo"), equals("two"))
+  
 })
