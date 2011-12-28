@@ -2,9 +2,9 @@
 \alias{daply}
 \title{Split data frame, apply function, and return results in an array.}
 \usage{
-  daply(.data, .variables, .fun = NULL, ..., .progress =
-  "none", .drop_i = TRUE, .drop_o = TRUE, .parallel =
-  FALSE)
+  daply(.data, .variables, .fun = NULL, ...,
+    .progress = "none", .drop_i = TRUE, .drop_o = TRUE,
+    .parallel = FALSE)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -55,14 +55,14 @@ daply(baseball, .(year), nrow)
 # Several different ways of summarising by variables that should not be
 # included in the summary
 
-daply(baseball[, c(2, 6:9)], .(year), mean)
-daply(baseball[, 6:9], .(baseball$year), mean)
-daply(baseball, .(year), function(df) mean(df[, 6:9]))
+daply(baseball[, c(2, 6:9)], .(year), colwise(mean))
+daply(baseball[, 6:9], .(baseball$year), colwise(mean))
+daply(baseball, .(year), function(df) colwise(mean)(df[, 6:9]))
 }
 \references{
   Hadley Wickham (2011). The Split-Apply-Combine Strategy
   for Data Analysis. Journal of Statistical Software,
-  40(1), 1-29. \url{http://www.jstatsoft.org/v40/i01/}.
+  40(1), 1-29.  \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
   Other array output: \code{\link{aaply}},

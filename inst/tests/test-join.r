@@ -71,3 +71,27 @@ test_that("left and right are equivalent", {
   expect_that(left[c("a", "b" ,"c")], equals(right[c("a", "b" ,"c")]))
 
 })
+
+
+test_that("large number of columns work", {
+  df1 <- data.frame(matrix(1:100, ncol = 50), y = 1:2)
+  df2 <- data.frame(matrix(1:100, ncol = 50), z = 3:4)
+  
+  df <- join(df1, df2)
+  expect_that(df$y, equals(1:2))
+  expect_that(df$z, equals(3:4))
+  
+})
+
+test_that("many potential combinations works", {
+  factor_n <- function(m, n) {
+    factor(sample(n, m, rep = T), levels = seq_len(n))
+  }
+  df1 <- as.data.frame(replicate(20, factor_n(100, 100)))
+  df2 <- as.data.frame(replicate(20, factor_n(100, 100)))
+
+  j <- join(df1, df2)
+  j <- merge(df1, df2, all.x = TRUE)
+  
+  
+})
