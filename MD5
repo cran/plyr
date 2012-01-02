@@ -1,6 +1,6 @@
-e219f9c29849ffb1169f17fcc6802e55 *DESCRIPTION
+c95db4b09bcceb259084f93056b2c958 *DESCRIPTION
 8280054e503d798bd7f5b48a76730aa7 *NAMESPACE
-49a3d146208486f8df908ca17f1325d6 *NEWS
+8eac1ffc09bd09f9bb76e95dd811d67b *NEWS
 440943b4da15dec5e8c83f88bb77dcdb *R/data.r
 31ec5b7b64247e44008a27a1f93844a2 *R/dimensions.r
 949e179b3c8a9e83e19f4b178e081dce *R/helper-arrange.r
@@ -19,7 +19,7 @@ c3f4bc5baaa2be00a96fae50f235097a *R/helper-strip-splits.r
 7edfb23b1ab1a4f0b204e2c37bea167c *R/helper-summarise.r
 cdfaffb4b859c51d393f9c2c37c2f80f *R/helper-try.r
 278e5697a22c3979f98332185fc8e8dd *R/helper-vaggregate.r
-ebe5cd3f64e2d6965c21dc5cf1ddf097 *R/id.r
+ec2bebb2bc07c4637cb6a28c4e89d5e5 *R/id.r
 57d33661d1a1a95c3ad397d2b88aec91 *R/immutable.r
 7227ac3c846b56de488568b76500e9b4 *R/indexed-array.r
 cde3b285e844dec52d641c0bb635c781 *R/indexed-data-frame.r
@@ -161,4 +161,5 @@ dbafa9f424846e45f77e9d961b1ef717 *man/tryapply.Rd
 2ea2af25c66ef2a745886cbd9b640353 *man/vaggregate.Rd
 021c0a6dbed105a81284fb031280df1d *src/loop-apply.c
 f8ba0a3e5630453a11411906a040bd47 *src/split-numeric.c
+40942eb1281f8f6e3bf146e3a3bbcb26 *tests/dependencies.R
 9c5817fbf81a350e47b5d06c11d03440 *tests/test-all.R
