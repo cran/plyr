@@ -117,6 +117,18 @@ test_that("names captured from list", {
 test_that("correct number of rows outputted", {
   testdata <- data.frame(a = rep(letters[1:3], each = 5), b = rnorm(15))
   res <- ddply(testdata, .(a), function(x) c(mean(x$b), sd(x$b)))
-  
+
   expect_that(nrow(res), equals(3))
+})
+
+
+test_that("matrices converted to data frames", {
+  mat <- matrix(1:20, ncol = 4)
+  colnames(mat) <- letters[1:4]
+
+  li <- list(a = mat, b = mat)
+  df <- list_to_dataframe(li)
+
+  expect_equal(nrow(df), 2 * nrow(mat))
+  expect_equal(names(df), c(".id", "a", "b", "c", "d"))
 })

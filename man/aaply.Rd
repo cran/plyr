@@ -3,7 +3,8 @@
 \title{Split array, apply function, and return results in an array.}
 \usage{
   aaply(.data, .margins, .fun = NULL, ..., .expand = TRUE,
-    .progress = "none", .drop = TRUE, .parallel = FALSE)
+    .progress = "none", .inform = FALSE, .drop = TRUE,
+    .parallel = FALSE, .paropts = NULL)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -12,6 +13,21 @@
 
   \item{.progress}{name of the progress bar to use, see
   \code{\link{create_progress_bar}}}
+
+  \item{.parallel}{if \code{TRUE}, apply function in
+  parallel, using parallel backend provided by foreach}
+
+  \item{.paropts}{a list of additional options passed into
+  the \code{\link[foreach]{foreach}} function when parallel
+  computation is enabled.  This is important if (for
+  example) your code relies on external data or packages:
+  use the \code{.export} and \code{.packages} arguments to
+  supply them so that all cluster nodes have the correct
+  environment set up for computing.}
+
+  \item{.inform}{produce informative error messages?  This
+  is turned off by by default because it substantially
+  slows processing speed, but is very useful for debugging}
 
   \item{.data}{matrix, array or data frame to be processed}
 
@@ -22,11 +38,8 @@
 
   \item{.expand}{if \code{.data} is a data frame, should
   output be 1d (expand = FALSE), with an element for each
-  row; or nd (expand = TRUE), with a}
-
-  \item{.parallel}{if \code{TRUE}, apply function in
-  parallel, using parallel backend provided by foreach
-  dimension for each variable.}
+  row; or nd (expand = TRUE), with a dimension for each
+  variable.}
 
   \item{.drop}{should extra dimensions of length 1 in the
   output be dropped, simplifying the output.  Defaults to
@@ -39,13 +52,16 @@
 }
 \description{
   For each slice of an array, apply function, keeping
-  results as an array. This function is very similar to
-  \code{\link{apply}}, except that it will always return an
-  array, and when the function returns >1 d data
-  structures, those dimensions are added on to the highest
-  dimensions, rather than the lowest dimensions.  This
-  makes \code{aaply} idempotent, so that \code{apply(input,
-  X, identity)} is equivalent to \code{aperm(input, X)}.
+  results as an array.
+}
+\details{
+  This function is very similar to \code{\link{apply}},
+  except that it will always return an array, and when the
+  function returns >1 d data structures, those dimensions
+  are added on to the highest dimensions, rather than the
+  lowest dimensions.  This makes \code{aaply} idempotent,
+  so that \code{aaply(input, X, identity)} is equivalent to
+  \code{aperm(input, X)}.
 }
 \section{Input}{
   This function splits matrices, arrays and data frames by
@@ -81,11 +97,11 @@ aaply(ozone, 1:2, diff)
   40(1), 1-29.  \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-  Other array input: \code{\link{adply}},
-  \code{\link{alply}}
+  Other array input: \code{\link{a_ply}},
+  \code{\link{adply}}, \code{\link{alply}}
 
   Other array output: \code{\link{daply}},
-  \code{\link{laply}}
+  \code{\link{laply}}, \code{\link{maply}}
 }
 \keyword{manip}
 

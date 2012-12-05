@@ -3,7 +3,8 @@
 \title{Split list, apply function, and return results in an array.}
 \usage{
   laply(.data, .fun = NULL, ..., .progress = "none",
-    .drop = TRUE, .parallel = FALSE)
+    .inform = FALSE, .drop = TRUE, .parallel = FALSE,
+    .paropts = NULL)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -13,10 +14,22 @@
   \item{.progress}{name of the progress bar to use, see
   \code{\link{create_progress_bar}}}
 
-  \item{.data}{list to be processed}
-
   \item{.parallel}{if \code{TRUE}, apply function in
   parallel, using parallel backend provided by foreach}
+
+  \item{.paropts}{a list of additional options passed into
+  the \code{\link[foreach]{foreach}} function when parallel
+  computation is enabled.  This is important if (for
+  example) your code relies on external data or packages:
+  use the \code{.export} and \code{.packages} arguments to
+  supply them so that all cluster nodes have the correct
+  environment set up for computing.}
+
+  \item{.inform}{produce informative error messages?  This
+  is turned off by by default because it substantially
+  slows processing speed, but is very useful for debugging}
+
+  \item{.data}{list to be processed}
 
   \item{.drop}{should extra dimensions of length 1 in the
   output be dropped, simplifying the output.  Defaults to
@@ -29,15 +42,16 @@
 }
 \description{
   For each element of a list, apply function then combine
-  results into an array. \code{laply} is similar in spirit
-  to \code{\link{sapply}} except that it will always return
-  an array, and the output is transposed with respect
-  \code{sapply} - each element of the list corresponds to a
-  column, not a row.
+  results into an array.
+}
+\details{
+  \code{laply} is similar in spirit to \code{\link{sapply}}
+  except that it will always return an array, and the
+  output is transposed with respect \code{sapply} - each
+  element of the list corresponds to a row, not a column.
 }
 \section{Input}{
-  This function splits lists by elements and combines the
-  result into a data frame.
+  This function splits lists by elements.
 }
 
 \section{Output}{
@@ -61,10 +75,10 @@ laply(seq_len(10), matrix, nrow = 2, ncol = 2)
 }
 \seealso{
   Other array output: \code{\link{aaply}},
-  \code{\link{daply}}
+  \code{\link{daply}}, \code{\link{maply}}
 
-  Other list input: \code{\link{ldply}},
-  \code{\link{llply}}
+  Other list input: \code{\link{l_ply}},
+  \code{\link{ldply}}, \code{\link{llply}}
 }
 \keyword{manip}
 

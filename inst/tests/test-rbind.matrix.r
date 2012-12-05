@@ -30,7 +30,7 @@ test_that ("additional columns are NA: should behave like rbind.fill for data.fr
   ref <- as.matrix (rbind.fill (as.data.frame (a), as.data.frame (b)))
   colnames (ref) <- seq_len(ncol(ref))
   rownames (ref) <- NULL
-  
+
   expect_that(new, equals(ref))
 })
 
@@ -44,7 +44,7 @@ test_that ("merge with column names: should behave like rbind.fill for data.fram
 
   ref <- as.matrix (rbind.fill (as.data.frame (a), as.data.frame (b)))
   rownames (ref) <- NULL
-  
+
   expect_that(new, equals(ref))
 })
 
@@ -59,22 +59,22 @@ test_that ("merge with column names: should behave like rbind.fill for data.fram
 
   ref <- as.matrix (rbind.fill (as.data.frame (a), as.data.frame (b)))
   rownames (ref) <- NULL
-  
+
   expect_that(new, equals(ref))
 })
 
 test_that ("only 1 element: should behave like rbind.fill for data.frame",{
   a <- matrix (1, 1)
   colnames (a) <- letters [2]
-  
+
   b <- matrix (1:9, 3)
   colnames (b) <- letters [c (1, 2, 4)]
-  
+
   new <- rbind.fill.matrix (a, b)
 
   ref <- as.matrix (rbind.fill (as.data.frame (a), as.data.frame (b)))
   rownames (ref) <- NULL
-  
+
   expect_that(new, equals(ref))
 })
 
@@ -90,7 +90,7 @@ test_that ("character + numeric: should behave like rbind.fill for data.frame",{
                      as.data.frame (b, stringsAsFactors = FALSE))
   ref <- as.matrix (sapply (ref, as.character)) # the last column is integer and would gain a second
                                                 # character with direct as.matrix
-  
+
   expect_that(new, equals(ref))
 })
 
@@ -112,5 +112,28 @@ test_that ("vector: uses as.matrix",{
   expect_that(new, equals (new))
 })
 
+test_that("zero-row matrices", {
+  m1 <- matrix(nrow=0, ncol=2, dimnames=list(NULL, c("x", "y")))
+  m2 <- matrix(nrow=0, ncol=2, dimnames=list(NULL, c("y", "z")))
+  m3 <- matrix(c(1,2), nrow=2, ncol=1, dimnames=list(NULL, "y"))
+  
+  ba <- rbind.fill.matrix(m1)
+  bb <- rbind.fill.matrix(m2, m3)
+  bc <- rbind.fill.matrix(m1, m2)
+  
+  expect_equal(class(ba), "matrix")
+  expect_equal(nrow(ba), 0)
+  expect_true(all(colnames(ba) %in% c("x", "y")))
+  
+  expect_equal(class(bb), "matrix")
+  expect_equal(nrow(bb), 2)
+  expect_true(all(names(bb) %in% c("x", "y", "z")))
+  expect_equal(bb[,"y"], m3[,"y"])
+  expect_equal(bb[,"z"], rep(as.numeric(NA), nrow(m3)))
+  
+  expect_equal(class(bc), "matrix")
+  expect_equal(nrow(bc), 0)
+  expect_true(all(colnames(bc) %in% c("x", "y", "z")))
+})
 
- 
+

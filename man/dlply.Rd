@@ -3,7 +3,8 @@
 \title{Split data frame, apply function, and return results in a list.}
 \usage{
   dlply(.data, .variables, .fun = NULL, ...,
-    .progress = "none", .drop = TRUE, .parallel = FALSE)
+    .progress = "none", .inform = FALSE, .drop = TRUE,
+    .parallel = FALSE, .paropts = NULL)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -13,17 +14,30 @@
   \item{.progress}{name of the progress bar to use, see
   \code{\link{create_progress_bar}}}
 
+  \item{.parallel}{if \code{TRUE}, apply function in
+  parallel, using parallel backend provided by foreach}
+
+  \item{.paropts}{a list of additional options passed into
+  the \code{\link[foreach]{foreach}} function when parallel
+  computation is enabled.  This is important if (for
+  example) your code relies on external data or packages:
+  use the \code{.export} and \code{.packages} arguments to
+  supply them so that all cluster nodes have the correct
+  environment set up for computing.}
+
+  \item{.inform}{produce informative error messages?  This
+  is turned off by by default because it substantially
+  slows processing speed, but is very useful for debugging}
+
   \item{.data}{data frame to be processed}
 
   \item{.variables}{variables to split data frame by, as
-  quoted variables, a formula or character vector}
+  \code{\link{as.quoted}} variables, a formula or character
+  vector}
 
   \item{.drop}{should combinations of variables that do not
   appear in the input data be preserved (FALSE) or dropped
   (TRUE, default)}
-
-  \item{.parallel}{if \code{TRUE}, apply function in
-  parallel, using parallel backend provided by foreach}
 }
 \value{
   list of results
@@ -60,11 +74,11 @@ hist(qual)
   40(1), 1-29.  \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-  Other data frame input: \code{\link{daply}},
-  \code{\link{ddply}}
+  Other data frame input: \code{\link{d_ply}},
+  \code{\link{daply}}, \code{\link{ddply}}
 
   Other list output: \code{\link{alply}},
-  \code{\link{llply}}
+  \code{\link{llply}}, \code{\link{mlply}}
 }
 \keyword{manip}
 

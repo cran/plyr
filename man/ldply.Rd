@@ -3,7 +3,7 @@
 \title{Split list, apply function, and return results in a data frame.}
 \usage{
   ldply(.data, .fun = NULL, ..., .progress = "none",
-    .parallel = FALSE)
+    .inform = FALSE, .parallel = FALSE, .paropts = NULL)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -13,10 +13,22 @@
   \item{.progress}{name of the progress bar to use, see
   \code{\link{create_progress_bar}}}
 
-  \item{.data}{list to be processed}
-
   \item{.parallel}{if \code{TRUE}, apply function in
   parallel, using parallel backend provided by foreach}
+
+  \item{.paropts}{a list of additional options passed into
+  the \code{\link[foreach]{foreach}} function when parallel
+  computation is enabled.  This is important if (for
+  example) your code relies on external data or packages:
+  use the \code{.export} and \code{.packages} arguments to
+  supply them so that all cluster nodes have the correct
+  environment set up for computing.}
+
+  \item{.inform}{produce informative error messages?  This
+  is turned off by by default because it substantially
+  slows processing speed, but is very useful for debugging}
+
+  \item{.data}{list to be processed}
 }
 \value{
   A data frame, as described in the output section.
@@ -26,8 +38,7 @@
   results into a data frame.
 }
 \section{Input}{
-  This function splits lists by elements and combines the
-  result into a data frame.
+  This function splits lists by elements.
 }
 
 \section{Output}{
@@ -49,10 +60,10 @@
 }
 \seealso{
   Other data frame output: \code{\link{adply}},
-  \code{\link{ddply}}
+  \code{\link{ddply}}, \code{\link{mdply}}
 
-  Other list input: \code{\link{laply}},
-  \code{\link{llply}}
+  Other list input: \code{\link{l_ply}},
+  \code{\link{laply}}, \code{\link{llply}}
 }
 \keyword{manip}
 

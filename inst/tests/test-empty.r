@@ -8,8 +8,7 @@ test_that("empty arrays returns object of same shape", {
   expect_that(aaply(x, 3, identity), equals(logical()))
 
   expect_that(adply(x, 1, identity), equals(data.frame()))
-  expect_that(alply(x, 1, identity), equals(list()))
-
+  expect_that(alply(x, 1, identity), is_equivalent_to(list()))
 })
 
 test_that("empty lists return an empty object", {
@@ -31,10 +30,10 @@ test_that("empty data frame results returns empty object", {
     ddply(df, "a", function(x) NULL),
     equals(data.frame()))
   expect_that(
-    dlply(df, "a", function(x) NULL), 
+    dlply(df, "a", function(x) NULL),
     equals(rep(list(NULL), 10), check.attributes = FALSE))
   expect_that(
     daply(df, "a", function(x) NULL),
     throws_error("must have one or more dimensions"))
-  
+
 })

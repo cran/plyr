@@ -3,7 +3,8 @@
 \title{Split array, apply function, and return results in a data frame.}
 \usage{
   adply(.data, .margins, .fun = NULL, ..., .expand = TRUE,
-    .progress = "none", .parallel = FALSE)
+    .progress = "none", .inform = FALSE, .parallel = FALSE,
+    .paropts = NULL)
 }
 \arguments{
   \item{.fun}{function to apply to each piece}
@@ -12,6 +13,21 @@
 
   \item{.progress}{name of the progress bar to use, see
   \code{\link{create_progress_bar}}}
+
+  \item{.parallel}{if \code{TRUE}, apply function in
+  parallel, using parallel backend provided by foreach}
+
+  \item{.paropts}{a list of additional options passed into
+  the \code{\link[foreach]{foreach}} function when parallel
+  computation is enabled.  This is important if (for
+  example) your code relies on external data or packages:
+  use the \code{.export} and \code{.packages} arguments to
+  supply them so that all cluster nodes have the correct
+  environment set up for computing.}
+
+  \item{.inform}{produce informative error messages?  This
+  is turned off by by default because it substantially
+  slows processing speed, but is very useful for debugging}
 
   \item{.data}{matrix, array or data frame to be processed}
 
@@ -22,11 +38,8 @@
 
   \item{.expand}{if \code{.data} is a data frame, should
   output be 1d (expand = FALSE), with an element for each
-  row; or nd (expand = TRUE), with a}
-
-  \item{.parallel}{if \code{TRUE}, apply function in
-  parallel, using parallel backend provided by foreach
-  dimension for each variable.}
+  row; or nd (expand = TRUE), with a dimension for each
+  variable.}
 }
 \value{
   A data frame, as described in the output section.
@@ -58,11 +71,11 @@
   40(1), 1-29.  \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-  Other array input: \code{\link{aaply}},
-  \code{\link{alply}}
+  Other array input: \code{\link{a_ply}},
+  \code{\link{aaply}}, \code{\link{alply}}
 
   Other data frame output: \code{\link{ddply}},
-  \code{\link{ldply}}
+  \code{\link{ldply}}, \code{\link{mdply}}
 }
 \keyword{manip}
 
