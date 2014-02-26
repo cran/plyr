@@ -1,14 +1,16 @@
 #' List to data frame.
 #'
-#' Reduce/simplify a list of homogenous objects to a data frame.
-#' All \code{NULL} entries are removed. Remaining entries must be all atomic
+#' Reduce/simplify a list of homogenous objects to a data frame. All
+#' \code{NULL} entries are removed. Remaining entries must be all atomic
 #' or all data frames.
 #'
 #' @family list simplification functions
 #' @param res list of input data
 #' @param labels a data frame of labels, one row for each element of res
+#' @param idname the name of the index column, \code{NULL} for no index
+#'   column
 #' @keywords internal
-list_to_dataframe <- function(res, labels = NULL) {
+list_to_dataframe <- function(res, labels = NULL, id_name = NULL, id_as_factor = FALSE) {
   null <- vapply(res, is.null, logical(1))
   res <- res[!null]
   if (length(res) == 0) return(data.frame())
@@ -17,8 +19,13 @@ list_to_dataframe <- function(res, labels = NULL) {
     stopifnot(nrow(labels) == length(null))
     labels <- labels[!null, , drop = FALSE]
   }
-  if (is.null(labels) && !is.null(names(res))) {
-    labels <- data.frame(.id = names(res), stringsAsFactors = FALSE)
+  names_res <- names(res)
+  if (!is.null(id_name) && is.null(labels) && !is.null(names_res)) {
+    stopifnot(length(id_name) == 1)
+    if (id_as_factor)
+      names_res <- factor(names_res, levels = unique(names_res))
+    labels <- data.frame(.id = names_res, stringsAsFactors = FALSE)
+    names(labels) <- id_name
   }
 
   # Figure out how to turn elements into a data frame
