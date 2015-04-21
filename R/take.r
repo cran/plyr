@@ -6,6 +6,7 @@
 #' @param drop should the dimensions of the array be simplified? Defaults
 #'   to \code{FALSE} which is the opposite of the useful R default.
 #' @export
+#' @keywords manip
 #' @examples
 #' x <- array(seq_len(3 * 4 * 5), c(3, 4, 5))
 #' take(x, 3, 1)
@@ -22,4 +23,3 @@ take <- function(x, along, indices, drop = FALSE) {
 
   eval(as.call(c(as.name("["), as.name("x"), index, drop = drop)))
 }
-

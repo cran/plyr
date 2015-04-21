@@ -2,6 +2,8 @@
 #'
 #' For each subset of a data frame, apply function then combine results into a
 #' data frame.
+#' To apply a function for each row, use \code{\link{adply}} with
+#' \code{.margins} set to \code{1}.
 #'
 #' @template ply
 #' @template d-
@@ -10,7 +12,6 @@
 #' @export
 #' @examples
 #' # Summarize a dataset by two variables
-#' require(plyr)
 #' dfx <- data.frame(
 #'   group = c(rep('A', 8), rep('B', 15), rep('C', 6)),
 #'   sex = sample(c("M", "F"), size = 29, replace = TRUE),
