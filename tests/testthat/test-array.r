@@ -186,7 +186,6 @@ test_that("no support for duplicate names (#211)", {
     setNames(x, letters[c(1:9,2)])
   }
   B <- list(X=n(1:10), Y=n(11:20), Z=n(21:30))
-
   expect_warning(laply(B, identity), "Duplicate names")
 
   AB <- c('a', 'b', 'a', 'b')
@@ -194,6 +193,10 @@ test_that("no support for duplicate names (#211)", {
   ar <-  array(rep(rep(rep(1:4, 4), 4), 2), dim=c(4, 4, 2), dimnames=list(ABCD, ABCD, c('i', 'ii')))
   ar[,,2] <- ar[,,2]+4
   dimnames(ar)[1:2] <- list(AB, AB)
-  expect_warning(aaply(ar, 3, identity), "Duplicate names")
 
+  if (getRversion() >= "3.4.0") {
+    expect_error(aaply(ar, 3, identity), "duplicated")
+  } else {
+    expect_warning(aaply(ar, 3, identity), "Duplicate names")
+  }
 })

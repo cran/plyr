@@ -89,12 +89,12 @@ progress_text <- function(style = 3, ...) {
 
   list(
     init = function(x) {
-      txt <<- txtProgressBar(max = x, style = style, ...)
-      setTxtProgressBar(txt, 0)
+      txt <<- utils::txtProgressBar(max = x, style = style, ...)
+      utils::setTxtProgressBar(txt, 0)
     },
     step = function() {
       n <<- n + 1
-      setTxtProgressBar(txt, n)
+      utils::setTxtProgressBar(txt, n)
     },
     term = function() close(txt)
   )
@@ -158,12 +158,12 @@ progress_win <- function(title = "plyr progress", ...) {
 
   list(
     init = function(x) {
-      win <<- winProgressBar(max = x, title = title, ...) # nolint
-      setWinProgressBar(win, 0) # nolint
+      win <<- utils::winProgressBar(max = x, title = title, ...) # nolint
+      utils::setWinProgressBar(win, 0) # nolint
     },
     step = function() {
       n <<- n + 1
-      setWinProgressBar(win, n) # nolint
+      utils::setWinProgressBar(win, n) # nolint
     },
     term = function() close(win)
   )
