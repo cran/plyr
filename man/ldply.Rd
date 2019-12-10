@@ -4,8 +4,16 @@
 \alias{ldply}
 \title{Split list, apply function, and return results in a data frame.}
 \usage{
-ldply(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
-  .parallel = FALSE, .paropts = NULL, .id = NA)
+ldply(
+  .data,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL,
+  .id = NA
+)
 }
 \arguments{
 \item{.data}{list to be processed}
@@ -58,17 +66,23 @@ frame.
  If there are no results, then this function will return a data
  frame with zero rows and columns (\code{data.frame()}).
 }
+
 \references{
 Hadley Wickham (2011). The Split-Apply-Combine Strategy
   for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other data frame output: \code{\link{adply}},
-  \code{\link{ddply}}, \code{\link{mdply}}
+Other list input: 
+\code{\link{l_ply}()},
+\code{\link{laply}()},
+\code{\link{llply}()}
 
-Other list input: \code{\link{l_ply}}, \code{\link{laply}},
-  \code{\link{llply}}
+Other data frame output: 
+\code{\link{adply}()},
+\code{\link{ddply}()},
+\code{\link{mdply}()}
 }
+\concept{data frame output}
+\concept{list input}
 \keyword{manip}
-

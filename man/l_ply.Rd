@@ -4,8 +4,16 @@
 \alias{l_ply}
 \title{Split list, apply function, and discard results.}
 \usage{
-l_ply(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
-  .print = FALSE, .parallel = FALSE, .paropts = NULL)
+l_ply(
+  .data,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .print = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{list to be processed}
@@ -49,6 +57,7 @@ For each element of a list, apply function and discard results
   calling purely for their side effects like displaying plots or
   saving output.
 }
+
 \examples{
 l_ply(llply(mtcars, round), table, .print = TRUE)
 l_ply(baseball, function(x) print(summary(x)))
@@ -59,11 +68,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other list input: \code{\link{laply}}, \code{\link{ldply}},
-  \code{\link{llply}}
+Other list input: 
+\code{\link{laply}()},
+\code{\link{ldply}()},
+\code{\link{llply}()}
 
-Other no output: \code{\link{a_ply}}, \code{\link{d_ply}},
-  \code{\link{m_ply}}
+Other no output: 
+\code{\link{a_ply}()},
+\code{\link{d_ply}()},
+\code{\link{m_ply}()}
 }
+\concept{list input}
+\concept{no output}
 \keyword{manip}
-

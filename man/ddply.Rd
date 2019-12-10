@@ -4,8 +4,17 @@
 \alias{ddply}
 \title{Split data frame, apply function, and return results in a data frame.}
 \usage{
-ddply(.data, .variables, .fun = NULL, ..., .progress = "none",
-  .inform = FALSE, .drop = TRUE, .parallel = FALSE, .paropts = NULL)
+ddply(
+  .data,
+  .variables,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{data frame to be processed}
@@ -61,6 +70,7 @@ To apply a function for each row, use \code{\link{adply}} with
  If there are no results, then this function will return a data
  frame with zero rows and columns (\code{data.frame()}).
 }
+
 \examples{
 # Summarize a dataset by two variables
 dfx <- data.frame(
@@ -100,11 +110,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
 \seealso{
 \code{\link{tapply}} for similar functionality in the base package
 
-Other data frame input: \code{\link{d_ply}},
-  \code{\link{daply}}, \code{\link{dlply}}
+Other data frame input: 
+\code{\link{d_ply}()},
+\code{\link{daply}()},
+\code{\link{dlply}()}
 
-Other data frame output: \code{\link{adply}},
-  \code{\link{ldply}}, \code{\link{mdply}}
+Other data frame output: 
+\code{\link{adply}()},
+\code{\link{ldply}()},
+\code{\link{mdply}()}
 }
+\concept{data frame input}
+\concept{data frame output}
 \keyword{manip}
-

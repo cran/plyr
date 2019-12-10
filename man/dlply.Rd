@@ -4,8 +4,17 @@
 \alias{dlply}
 \title{Split data frame, apply function, and return results in a list.}
 \usage{
-dlply(.data, .variables, .fun = NULL, ..., .progress = "none",
-  .inform = FALSE, .drop = TRUE, .parallel = FALSE, .paropts = NULL)
+dlply(
+  .data,
+  .variables,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{data frame to be processed}
@@ -55,6 +64,7 @@ To apply a function for each row, use \code{\link{alply}} with
  If there are no results, then this function will return
   a list of length 0 (\code{list()}).
 }
+
 \examples{
 linmod <- function(df) {
   lm(rbi ~ year, data = mutate(df, year = year - min(year)))
@@ -73,11 +83,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other data frame input: \code{\link{d_ply}},
-  \code{\link{daply}}, \code{\link{ddply}}
+Other data frame input: 
+\code{\link{d_ply}()},
+\code{\link{daply}()},
+\code{\link{ddply}()}
 
-Other list output: \code{\link{alply}},
-  \code{\link{llply}}, \code{\link{mlply}}
+Other list output: 
+\code{\link{alply}()},
+\code{\link{llply}()},
+\code{\link{mlply}()}
 }
+\concept{data frame input}
+\concept{list output}
 \keyword{manip}
-

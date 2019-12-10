@@ -4,8 +4,16 @@
 \alias{laply}
 \title{Split list, apply function, and return results in an array.}
 \usage{
-laply(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
-  .drop = TRUE, .parallel = FALSE, .paropts = NULL)
+laply(
+  .data,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{list to be processed}
@@ -58,6 +66,7 @@ not a column.
   If there are no results, then this function will return a vector of
   length 0 (\code{vector()}).
 }
+
 \examples{
 laply(baseball, is.factor)
 # cf
@@ -74,11 +83,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other array output: \code{\link{aaply}},
-  \code{\link{daply}}, \code{\link{maply}}
+Other list input: 
+\code{\link{l_ply}()},
+\code{\link{ldply}()},
+\code{\link{llply}()}
 
-Other list input: \code{\link{l_ply}}, \code{\link{ldply}},
-  \code{\link{llply}}
+Other array output: 
+\code{\link{aaply}()},
+\code{\link{daply}()},
+\code{\link{maply}()}
 }
+\concept{array output}
+\concept{list input}
 \keyword{manip}
-

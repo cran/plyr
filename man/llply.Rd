@@ -4,8 +4,15 @@
 \alias{llply}
 \title{Split list, apply function, and return results in a list.}
 \usage{
-llply(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
-  .parallel = FALSE, .paropts = NULL)
+llply(
+  .data,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{list to be processed}
@@ -49,6 +56,7 @@ preserve labels and can display a progress bar.
  If there are no results, then this function will return
   a list of length 0 (\code{list()}).
 }
+
 \examples{
 llply(llply(mtcars, round), table)
 llply(baseball, summary)
@@ -64,11 +72,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other list input: \code{\link{l_ply}}, \code{\link{laply}},
-  \code{\link{ldply}}
+Other list input: 
+\code{\link{l_ply}()},
+\code{\link{laply}()},
+\code{\link{ldply}()}
 
-Other list output: \code{\link{alply}},
-  \code{\link{dlply}}, \code{\link{mlply}}
+Other list output: 
+\code{\link{alply}()},
+\code{\link{dlply}()},
+\code{\link{mlply}()}
 }
+\concept{list input}
+\concept{list output}
 \keyword{manip}
-

@@ -4,9 +4,18 @@
 \alias{d_ply}
 \title{Split data frame, apply function, and discard results.}
 \usage{
-d_ply(.data, .variables, .fun = NULL, ..., .progress = "none",
-  .inform = FALSE, .drop = TRUE, .print = FALSE, .parallel = FALSE,
-  .paropts = NULL)
+d_ply(
+  .data,
+  .variables,
+  .fun = NULL,
+  ...,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .print = FALSE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{data frame to be processed}
@@ -58,17 +67,23 @@ To apply a function for each row, use \code{\link{a_ply}} with
   calling purely for their side effects like displaying plots or
   saving output.
 }
+
 \references{
 Hadley Wickham (2011). The Split-Apply-Combine Strategy
   for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other data frame input: \code{\link{daply}},
-  \code{\link{ddply}}, \code{\link{dlply}}
+Other data frame input: 
+\code{\link{daply}()},
+\code{\link{ddply}()},
+\code{\link{dlply}()}
 
-Other no output: \code{\link{a_ply}}, \code{\link{l_ply}},
-  \code{\link{m_ply}}
+Other no output: 
+\code{\link{a_ply}()},
+\code{\link{l_ply}()},
+\code{\link{m_ply}()}
 }
+\concept{data frame input}
+\concept{no output}
 \keyword{manip}
-

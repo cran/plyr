@@ -50,4 +50,3 @@ y1 <- sample.int(10, 1e6, replace = TRUE)
 system.time(tapply(x, y1, mean))
 system.time(vaggregate(x, y1, mean))
 }
-

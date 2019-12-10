@@ -4,8 +4,17 @@
 \alias{maply}
 \title{Call function with arguments in array or data frame, returning an array.}
 \usage{
-maply(.data, .fun = NULL, ..., .expand = TRUE, .progress = "none",
-  .inform = FALSE, .drop = TRUE, .parallel = FALSE, .paropts = NULL)
+maply(
+  .data,
+  .fun = NULL,
+  ...,
+  .expand = TRUE,
+  .progress = "none",
+  .inform = FALSE,
+  .drop = TRUE,
+  .parallel = FALSE,
+  .paropts = NULL
+)
 }
 \arguments{
 \item{.data}{matrix or data frame to use as source of arguments}
@@ -62,6 +71,7 @@ and \code{.fun} wrapped in \code{\link{splat}}.
   If there are no results, then this function will return a vector of
   length 0 (\code{vector()}).
 }
+
 \examples{
 maply(cbind(mean = 1:5, sd = 1:5), rnorm, n = 5)
 maply(expand.grid(mean = 1:5, sd = 1:5), rnorm, n = 5)
@@ -73,11 +83,16 @@ Hadley Wickham (2011). The Split-Apply-Combine Strategy
   \url{http://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
-Other array output: \code{\link{aaply}},
-  \code{\link{daply}}, \code{\link{laply}}
+Other multiple arguments input: 
+\code{\link{m_ply}()},
+\code{\link{mdply}()},
+\code{\link{mlply}()}
 
-Other multiple arguments input: \code{\link{m_ply}},
-  \code{\link{mdply}}, \code{\link{mlply}}
+Other array output: 
+\code{\link{aaply}()},
+\code{\link{daply}()},
+\code{\link{laply}()}
 }
+\concept{array output}
+\concept{multiple arguments input}
 \keyword{manip}
-
