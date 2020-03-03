@@ -1,6 +1,7 @@
-9b53fe14cc5604e05e9eedc6ffaa7e01 *DESCRIPTION
+415c12c2c2d182bb9a9346ec30f3229a *DESCRIPTION
 7bb6b2019939096672a443d7b6e80d5b *LICENSE
 5c0d46d0e919fbbec9f37864fee394f2 *NAMESPACE
+af1184c149876d394751c33b83abb19d *NEWS.md
 abdba3958a1bc9467ac29e00163cc64c *R/RcppExports.R
 2cacb3ab0a140e444938f826a09b7a0d *R/a_ply.r
 4b2f1db5592db1334de9bd61ee98436b *R/aaply.r
@@ -172,7 +173,7 @@ be479917e2a9f5881bbab74e5ee01e60 *man/vaggregate.Rd
 d564b7820ed6c9598ef0e9f39913a4dc *tests/testthat/quickdf.r
 276325b0874ec8b9dae723d82a2be520 *tests/testthat/test-arrange.r
 09334c7a36081c3009350191e56f3271 *tests/testthat/test-array.r
-187e40ad2a81d6d05ff7d359b3abcdc0 *tests/testthat/test-count.r
+585d837144509f399649df533db01824 *tests/testthat/test-count.r
 8e4432b2f786df04c93acbc3df0e6dd8 *tests/testthat/test-data-frame.r
 e48e8b4ea198110449eee62660bb7f87 *tests/testthat/test-debug.r
 570589b2d8f6a5e7a5a9292bde0255c3 *tests/testthat/test-empty.r
@@ -189,7 +190,7 @@ a862ac5d7ab225e96258d6d67d820239 *tests/testthat/test-parallel.r
 146c98c42bcdd398d2805c35aaf83b6d *tests/testthat/test-progress.r
 173260708c547a2ebd96c2cd797c8e07 *tests/testthat/test-quote.r
 d40b96dc9207f3ce52b59c2b41044b26 *tests/testthat/test-rbind.matrix.r
-cc15c8574d30050d05ce5a02dccb6fad *tests/testthat/test-rbind.r
+a553970d65b2e74e6d73c230c6e2ae6f *tests/testthat/test-rbind.r
 567571b52e4ddee6873533f2f1ed3185 *tests/testthat/test-rename.r
 30bab23a097dc350296100a63088b04e *tests/testthat/test-replicate.r
 a4727a9d37fcf4385aab5b72866d8332 *tests/testthat/test-revalue.r
@@ -197,6 +198,6 @@ a4727a9d37fcf4385aab5b72866d8332 *tests/testthat/test-revalue.r
 c2a2f2887e3926a850e1923ae62689a0 *tests/testthat/test-simplify-df.r
 8333352212f7d58b1e53ce26a60afb5f *tests/testthat/test-split-data-frame.r
 d2dd8597307e5cd0b7bb7e1bae4ab331 *tests/testthat/test-split-indices.r
-9dd79657465c4e2ab72d4209f047854b *tests/testthat/test-split-labels.r
+3f495423863339ea9467c8c1ca40c7c7 *tests/testthat/test-split-labels.r
 2ccbc25d64e4f30451be4b5c019c7071 *tests/testthat/test-summarise.r
 b76073a4e32c45b1bc2cbd8911329cc7 *tests/testthat/test-utils.r
