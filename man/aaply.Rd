@@ -68,8 +68,10 @@ lowest dimensions.  This makes \code{aaply} idempotent, so that
 \code{aaply(input, X, identity)} is equivalent to \code{aperm(input, X)}.
 }
 \section{Warning}{
-Passing a data frame as first argument may lead to
-unexpected results, see \url{https://github.com/hadley/plyr/issues/212}.
+
+Contrary to \code{\link{alply}} and \code{\link{adply}}, passing a data
+frame as first argument to \code{aaply} may lead to unexpected results
+such as huge memory allocations.
 }
 
 \section{Input}{
@@ -105,7 +107,7 @@ aaply(ozone, 1:2, diff)
 \references{
 Hadley Wickham (2011). The Split-Apply-Combine Strategy
   for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
-  \url{http://www.jstatsoft.org/v40/i01/}.
+  \url{https://www.jstatsoft.org/v40/i01/}.
 }
 \seealso{
 Other array input: 

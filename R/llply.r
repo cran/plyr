@@ -27,7 +27,7 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
     pieces <- as.list(.data)
 
     # This special case can be done much faster with lapply, so do it.
-    fast_path <- .progress == "none" && !.inform && !.parallel
+    fast_path <- identical(.progress, "none") && !.inform && !.parallel
     if (fast_path) {
       return(structure(lapply(pieces, .fun, ...), dim = dim(pieces)))
     }
@@ -39,7 +39,7 @@ llply <- function(.data, .fun = NULL, ..., .progress = "none", .inform = FALSE,
   n <- length(pieces)
   if (n == 0) return(list())
 
-  if (.parallel && .progress != "none") {
+  if (.parallel && !identical(.progress, "none") && !identical(.progress, "progressr")) {
     message("Progress disabled when using parallel plyr")
     .progress <- "none"
   }
