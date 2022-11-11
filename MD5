@@ -1,7 +1,7 @@
-40cc14ce3ec413ba52c0e0d344ae2172 *DESCRIPTION
+ecaf6d59b34ee26ced08ce9ac2ccd507 *DESCRIPTION
 7bb6b2019939096672a443d7b6e80d5b *LICENSE
 5c0d46d0e919fbbec9f37864fee394f2 *NAMESPACE
-772cef0c90d40f16f117d682ec37b424 *NEWS.md
+a56f36ad24a6fff05381a1caf8f92a77 *NEWS.md
 abdba3958a1bc9467ac29e00163cc64c *R/RcppExports.R
 2cacb3ab0a140e444938f826a09b7a0d *R/a_ply.r
 5a9ee0c6886f30d0c9319f1028a2c53e *R/aaply.r
@@ -47,7 +47,7 @@ f883208d0ce69464dfbe690812161a44 *R/name-rows.r
 f66e62cbef6484534c99dc3934eba248 *R/plyr-deprecated.r
 b16022bfa5bd8b41a0b6cf68546269a9 *R/plyr.r
 22232615909daf78127cfde12d5e199d *R/progress-time.r
-77e7c5e10eb6de675e000b27e006c805 *R/progress.r
+ed17e4e9b1ad44cdd51209f8f606a534 *R/progress.r
 87b4723fec09c203ea9c98373d87cb4b *R/quickdf.r
 4505d22d30f983ade43482967a8873d3 *R/quote.r
 03410dc5ff7a406aa5b93573fbb2105a *R/r_ply.r
@@ -69,7 +69,7 @@ def748e3cbe191df41ddbf5804d48bd2 *R/take.r
 74343cc970ed6691fa2d2a0b18c3a7c5 *R/try.r
 40779d49b8ac7f779f3201fb22c5bb6b *R/utils.r
 3114568678a3ce43b5347986cb14597b *R/vaggregate.r
-8308fcb4cdd193afed3491114e8b8796 *README.md
+071559cff2e3a2f32eb7d070894a3c14 *README.md
 9b2d63a08f6c4d1718642d2c904c230a *data/baseball.rda
 12d6f72bbc8c97a10e7c4c235aab3ae3 *data/ozone.rda
 c5da964a3ed1d39e4ba4347498ccfe1e *inst/CITATION
@@ -140,7 +140,7 @@ f43a15d3287d228b61465d04703ed815 *man/progress_none.Rd
 ad99862c150ba61755960e9c3bf8a6a6 *man/progress_text.Rd
 185aff856057a61b8647133afdd9ffa8 *man/progress_time.Rd
 e32c6002744965dd978ee45f7d0cf627 *man/progress_tk.Rd
-e4aa1e7f953049a9f1ccdd161d4509da *man/progress_win.Rd
+22640c6b3ff71d0597b4a42d3a61a513 *man/progress_win.Rd
 e175951b3453a45dfc6bd1d5ddeeb83b *man/quickdf.Rd
 91b702f1c9c3cde42362c7361db1efce *man/quoted.Rd
 b474c6c72dc9199113d31e6ad7e360c6 *man/r_ply.Rd
@@ -190,7 +190,7 @@ a862ac5d7ab225e96258d6d67d820239 *tests/testthat/test-parallel.r
 146c98c42bcdd398d2805c35aaf83b6d *tests/testthat/test-progress.r
 173260708c547a2ebd96c2cd797c8e07 *tests/testthat/test-quote.r
 d40b96dc9207f3ce52b59c2b41044b26 *tests/testthat/test-rbind.matrix.r
-7789e33a52fa9bd57ca6c7424c2caa1c *tests/testthat/test-rbind.r
+a02a6d77d8829aba953c89ca64c6a289 *tests/testthat/test-rbind.r
 567571b52e4ddee6873533f2f1ed3185 *tests/testthat/test-rename.r
 30bab23a097dc350296100a63088b04e *tests/testthat/test-replicate.r
 a4727a9d37fcf4385aab5b72866d8332 *tests/testthat/test-revalue.r
